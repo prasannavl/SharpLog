@@ -81,17 +81,6 @@ namespace SharpLog
             }
         }
 
-        public override void Error(
-            Exception ex,
-            bool throwException = true,
-            [CallerMemberName] string callerName = null)
-        {
-            if (LogLevelState > LogLevelState.EnabledErrorLowerThreshold)
-            {
-                Execute(ex, callerName);
-            }
-        }
-
         public override Task CriticalAsync(string text, [CallerMemberName] string callerName = null)
         {
             if (LogLevelState > LogLevelState.EnabledCriticalLowerThreshold)
@@ -154,29 +143,7 @@ namespace SharpLog
             return Helpers.CompletedTask;
         }
 
-        public override Task ErrorAsync(
-            Exception ex,
-            bool throwException = true,
-            [CallerMemberName] string callerName = null)
-        {
-            if (LogLevelState > LogLevelState.EnabledErrorLowerThreshold)
-            {
-                return ExecuteAsync(ex, callerName).ContinueWith(
-                    (task, state) =>
-                        {
-                            if ((bool)state)
-                            {
-                                throw ex;
-                            }
-                        },
-                    throwException);
-            }
-            return Helpers.CompletedTask;
-        }
-
         protected abstract void Execute(LogLevel level, string text, string callerName);
-        protected abstract void Execute(Exception ex, string callerName);
         protected abstract Task ExecuteAsync(LogLevel level, string text, string callerName);
-        protected abstract Task ExecuteAsync(Exception ex, string callerName);
     }
 }

@@ -75,9 +75,6 @@ namespace SharpLog
         {
         }
 
-        public void Error(Exception ex, bool throwException = true, string callerName = null)
-        {
-        }
 
         public void Warn(string text, string callerName = null)
         {
@@ -101,11 +98,6 @@ namespace SharpLog
         }
 
         public Task ErrorAsync(string text, string callerName = null)
-        {
-            return Helpers.CompletedTask;
-        }
-
-        public Task ErrorAsync(Exception ex, bool throwException = true, string callerName = null)
         {
             return Helpers.CompletedTask;
         }

@@ -168,20 +168,6 @@ namespace SharpLog
             }
         }
 
-        public override void Error(
-            Exception ex,
-            bool throwException = true,
-            [CallerMemberName] string callerName = null)
-        {
-            if (LogLevelState > LogLevelState.EnabledErrorLowerThreshold)
-            {
-                foreach (var target in Targets)
-                {
-                    target.Value.Error(ex, throwException, callerName);
-                }
-            }
-        }
-
         public override async Task CriticalAsync(string text, [CallerMemberName] string callerName = null)
         {
             if (LogLevelState > LogLevelState.EnabledCriticalLowerThreshold)
@@ -227,17 +213,6 @@ namespace SharpLog
             if (LogLevelState.HasFlag(LogLevelState.Trace))
             {
                 await Task.WhenAll(Targets.Select(x => x.Value.TraceAsync(text, callerName)));
-            }
-        }
-
-        public override async Task ErrorAsync(
-            Exception ex,
-            bool throwException = true,
-            [CallerMemberName] string callerName = null)
-        {
-            if (LogLevelState > LogLevelState.EnabledErrorLowerThreshold)
-            {
-                await Task.WhenAll(Targets.Select(x => x.Value.ErrorAsync(ex, throwException, callerName)));
             }
         }
 

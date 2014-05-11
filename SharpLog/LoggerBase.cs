@@ -116,14 +116,12 @@ namespace SharpLog
 
         public abstract void Critical(string text, string callerName = null);
         public abstract void Error(string text, string callerName = null);
-        public abstract void Error(Exception ex, bool throwException = true, string callerName = null);
         public abstract void Warn(string text, string callerName = null);
         public abstract void Info(string text, string callerName = null);
         public abstract void Debug(string text, string callerName = null);
         public abstract void Trace(string text, string callerName = null);
 
         public abstract Task CriticalAsync(string text, string callerName = null);
-        public abstract Task ErrorAsync(Exception ex, bool throwException = true, string callerName = null);
         public abstract Task WarnAsync(string text, string callerName = null);
         public abstract Task InfoAsync(string text, string callerName = null);
         public abstract Task DebugAsync(string text, string callerName = null);

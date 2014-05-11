@@ -31,7 +31,6 @@ namespace SharpLog
 
         void Critical(string text, string callerName = null);
         void Error(string text, string callerName = null);
-        void Error(Exception ex, bool throwException = true, string callerName = null);
         void Warn(string text, string callerName = null);
         void Info(string text, string callerName = null);
         void Debug(string text, string callerName = null);
@@ -39,7 +38,6 @@ namespace SharpLog
 
         Task CriticalAsync(string text, string callerName = null);
         Task ErrorAsync(string text, string callerName = null);
-        Task ErrorAsync(Exception ex, bool throwException = true, string callerName = null);
         Task WarnAsync(string text, string callerName = null);
         Task InfoAsync(string text, string callerName = null);
         Task DebugAsync(string text, string callerName = null);

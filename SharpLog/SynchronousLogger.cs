@@ -28,10 +28,5 @@ namespace SharpLog
         {
             return Task.Run(() => Execute(level, text, callerName));
         }
-
-        protected override Task ExecuteAsync(Exception ex, string callerName)
-        {
-            return Task.Run(() => Execute(ex, callerName));
-        }
     }
 }

@@ -28,19 +28,9 @@ namespace SharpLog
             return string.Format("{0}: {1} -> {2}", level.ToString().ToUpperInvariant(), callerName, text);
         }
 
-        private static void WriteToDebug(string text)
-        {
-            System.Diagnostics.Debug.WriteLine(text);
-        }
-
         protected override void Execute(LogLevel level, string text, string callerName)
         {
-            WriteToDebug(text);
-        }
-
-        protected override void Execute(Exception ex, string callerName)
-        {
-            WriteToDebug(ex.Message);
+            System.Diagnostics.Debug.WriteLine(text);
         }
 
         protected override void Dispose(bool disposing)
