@@ -24,7 +24,7 @@ namespace SharpLog
     using System.Linq;
     using System.Threading;
 
-    using SharpLog.PortableScaffolds;
+    using SharpLog.PortablilityScaffolds;
 
     public static class LogManager
     {

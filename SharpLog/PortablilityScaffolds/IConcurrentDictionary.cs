@@ -17,7 +17,7 @@
 //  
 // Created: 3:43 PM 09-05-2014
 
-namespace SharpLog.PortableScaffolds
+namespace SharpLog.PortablilityScaffolds
 {
     using System;
     using System.Collections.Generic;

@@ -25,7 +25,7 @@ namespace SharpLog
     using System.Runtime.CompilerServices;
     using System.Threading.Tasks;
 
-    using SharpLog.PortableScaffolds;
+    using SharpLog.PortablilityScaffolds;
 
     public interface ICompositeLogger : ILogger
     {
