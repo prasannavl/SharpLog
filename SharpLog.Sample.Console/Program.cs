@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace SharpLog.Sample.Console
 {
+    using System.Reflection;
     using SharpLog.Desktop;
 
     class Program

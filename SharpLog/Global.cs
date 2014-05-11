@@ -20,6 +20,7 @@
 namespace SharpLog
 {
     using System;
+    using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
     using System.Threading;
@@ -101,8 +102,9 @@ namespace SharpLog
                             .GetValue(null);
                 }
                     // ReSharper disable once EmptyGeneralCatchClause
-                catch
+                catch (Exception ex)
                 {
+                    Debug.WriteLine(ex.Message);
                 }
             }
 

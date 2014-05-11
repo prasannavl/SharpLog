@@ -12,9 +12,9 @@ namespace SharpLog.Desktop
     using SimpleInjector;
     using SimpleInjector.Extensions;
 
-    public class Global
+    public static class Global
     {
-        public Container Services
+        public static Container Services
         {
             get
             {
@@ -22,7 +22,7 @@ namespace SharpLog.Desktop
             }
         }
 
-        private Container GetPlatformContainer()
+        private static Container GetPlatformContainer()
         {
             var container = new Container();
             container.RegisterOpenGeneric(typeof(IConcurrentDictionary<,>), typeof(ConcurrentDictionaryFacade<,>));
