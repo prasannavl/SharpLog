@@ -20,18 +20,121 @@
 namespace SharpLog
 {
     using System;
+    using System.Threading.Tasks;
 
-    public class NullLogger : SynchronousLogger
+    public class NullLogger : ILogger
     {
-        protected override void Execute(LogLevel level, string text, string callerName)
+        public bool IsEnabled
+        {
+            get
+            {
+                return true;
+            }
+            set
+            {
+            }
+        }
+
+        public bool IsTracingEnabled
+        {
+            get
+            {
+                return true;
+            }
+
+            set
+            {
+            }
+        }
+
+        public bool IsSynchronized
+        {
+            get
+            {
+                return true;
+            }
+        }
+
+        public LogLevel Level
+        {
+            get
+            {
+                return LogLevel.None;
+            }
+
+            set
+            {
+            }
+        }
+
+        public void Critical(string text, string callerName = null)
         {
         }
 
-        protected override void Execute(Exception ex, string callerName)
+        public void Error(string text, string callerName = null)
         {
         }
 
-        protected override void Dispose(bool disposing)
+        public void Error(Exception ex, bool throwException = true, string callerName = null)
+        {
+        }
+
+        public void Warn(string text, string callerName = null)
+        {
+        }
+
+        public void Info(string text, string callerName = null)
+        {
+        }
+
+        public void Debug(string text, string callerName = null)
+        {
+        }
+
+        public void Trace(string text, string callerName = null)
+        {
+        }
+
+        public Task CriticalAsync(string text, string callerName = null)
+        {
+            return Helpers.CompletedTask;
+        }
+
+        public Task ErrorAsync(string text, string callerName = null)
+        {
+            return Helpers.CompletedTask;
+        }
+
+        public Task ErrorAsync(Exception ex, bool throwException = true, string callerName = null)
+        {
+            return Helpers.CompletedTask;
+        }
+
+        public Task WarnAsync(string text, string callerName = null)
+        {
+            return Helpers.CompletedTask;
+        }
+
+        public Task InfoAsync(string text, string callerName = null)
+        {
+            return Helpers.CompletedTask;
+        }
+
+        public Task DebugAsync(string text, string callerName = null)
+        {
+            return Helpers.CompletedTask;
+        }
+
+        public Task TraceAsync(string text, string callerName = null)
+        {
+            return Helpers.CompletedTask;
+        }
+
+        public void Dispose()
+        {
+        }
+
+        protected void Dispose(bool disposing)
         {
         }
     }

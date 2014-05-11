@@ -23,6 +23,7 @@ namespace SharpLog
 
     public enum LogLevel
     {
+        None = LogLevelState.None,
         Critical = LogLevelState.Critical,
         Error = LogLevelState.Error,
         Warn = LogLevelState.Warn,
@@ -41,6 +42,7 @@ namespace SharpLog
     [Flags]
     public enum LogLevelState : byte
     {
+        None = 0,
         Trace = 0x01,
         Critical = 0x02,
         Error = 0x04,

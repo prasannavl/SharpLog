@@ -28,12 +28,13 @@ namespace SharpLog
 
     public static class LogManager
     {
-        private static readonly IConcurrentDictionary<string, ILogger> loggers;
+        private static readonly IConcurrentDictionary<string, ILogger> Loggers;
+        public static readonly ILogger NullLogger = new NullLogger();
         private static ILogger log;
 
         static LogManager()
         {
-            loggers = Global.Services.GetInstance<IConcurrentDictionary<string, ILogger>>();
+            Loggers = Global.Services.GetInstance<IConcurrentDictionary<string, ILogger>>();
         }
 
         public static ILogger Log
@@ -42,13 +43,29 @@ namespace SharpLog
             {
                 if (log == null)
                 {
-                    Interlocked.CompareExchange(ref log, new NullLogger(), null);
+                    Interlocked.CompareExchange(ref log, NullLogger, null);
                 }
                 return log;
             }
             set
             {
                 SetDefaultLogger(value);
+            }
+        }
+
+        public static void EnableAll()
+        {
+            foreach (var logger in Loggers)
+            {
+                logger.Value.IsEnabled = true;
+            }
+        }
+
+        public static void DisableAll()
+        {
+            foreach (var logger in Loggers)
+            {
+                logger.Value.IsEnabled = false;
             }
         }
 
@@ -67,7 +84,7 @@ namespace SharpLog
             {
                 SetDefaultLogger(logger);
             }
-            return loggers.TryAdd(name, logger);
+            return Loggers.TryAdd(name, logger);
         }
 
         public static void DetachLogger(string name, bool dispose = true)
@@ -77,12 +94,12 @@ namespace SharpLog
                 throw new ArgumentNullException("name");
             }
 
-            if (loggers.ContainsKey(name))
+            if (Loggers.ContainsKey(name))
             {
                 ILogger value = null;
-                if (loggers.TryGetValue(name, out value))
+                if (Loggers.TryGetValue(name, out value))
                 {
-                    loggers.Remove(name);
+                    Loggers.Remove(name);
 
                     if (dispose)
                     {
@@ -94,9 +111,9 @@ namespace SharpLog
 
         public static void DetachLogger(ILogger logger, bool dispose = true)
         {
-            foreach (var target in loggers.Where(x => x.Value == logger).ToArray())
+            foreach (var target in Loggers.Where(x => x.Value == logger).ToArray())
             {
-                loggers.Remove(target.Key);
+                Loggers.Remove(target.Key);
                 if (dispose)
                 {
                     target.Value.Dispose();
@@ -106,15 +123,15 @@ namespace SharpLog
 
         public static IEnumerable<KeyValuePair<string, ILogger>> GetAllLoggers()
         {
-            return loggers;
+            return Loggers;
         }
 
         public static ILogger GetLogger(string name)
         {
             ILogger logger = null;
-            if (loggers.ContainsKey(name))
+            if (Loggers.ContainsKey(name))
             {
-                loggers.TryGetValue(name, out logger);
+                Loggers.TryGetValue(name, out logger);
             }
 
             return logger;
@@ -124,15 +141,15 @@ namespace SharpLog
         {
             if (dispose)
             {
-                foreach (var logger in loggers.ToArray())
+                foreach (var logger in Loggers.ToArray())
                 {
-                    loggers.Remove(logger);
+                    Loggers.Remove(logger);
                     logger.Value.Dispose();
                 }
             }
             else
             {
-                loggers.Clear();
+                Loggers.Clear();
             }
         }
 
