@@ -42,6 +42,7 @@ namespace SharpLog
         public CompositeLogger()
         {
             Targets = Global.Services.GetInstance<IConcurrentDictionary<string, ILogger>>();
+            IsEnabled = true;
         }
 
         private IConcurrentDictionary<string, ILogger> Targets { get; set; }

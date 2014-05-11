@@ -21,6 +21,7 @@ namespace SharpLog
 {
     using System;
     using System.Diagnostics;
+    using System.Runtime.CompilerServices;
     using System.Threading.Tasks;
 
     public abstract class LoggerBase : ILogger
@@ -34,6 +35,7 @@ namespace SharpLog
         protected LoggerBase(LogLevel level)
         {
             Level = level;
+            IsEnabled = true;
         }
 
         public LogLevelState LogLevelState { get; protected set; }
@@ -114,19 +116,19 @@ namespace SharpLog
             }
         }
 
-        public abstract void Critical(string text, string callerName = null);
-        public abstract void Error(string text, string callerName = null);
-        public abstract void Warn(string text, string callerName = null);
-        public abstract void Info(string text, string callerName = null);
-        public abstract void Debug(string text, string callerName = null);
-        public abstract void Trace(string text, string callerName = null);
+        public abstract void Critical(string text, [CallerMemberName]string callerName = null);
+        public abstract void Error(string text, [CallerMemberName]string callerName = null);
+        public abstract void Warn(string text, [CallerMemberName]string callerName = null);
+        public abstract void Info(string text, [CallerMemberName]string callerName = null);
+        public abstract void Debug(string text, [CallerMemberName]string callerName = null);
+        public abstract void Trace(string text, [CallerMemberName]string callerName = null);
 
-        public abstract Task CriticalAsync(string text, string callerName = null);
-        public abstract Task WarnAsync(string text, string callerName = null);
-        public abstract Task InfoAsync(string text, string callerName = null);
-        public abstract Task DebugAsync(string text, string callerName = null);
-        public abstract Task TraceAsync(string text, string callerName = null);
-        public abstract Task ErrorAsync(string text, string callerName = null);
+        public abstract Task CriticalAsync(string text, [CallerMemberName]string callerName = null);
+        public abstract Task WarnAsync(string text, [CallerMemberName]string callerName = null);
+        public abstract Task InfoAsync(string text, [CallerMemberName]string callerName = null);
+        public abstract Task DebugAsync(string text, [CallerMemberName]string callerName = null);
+        public abstract Task TraceAsync(string text, [CallerMemberName]string callerName = null);
+        public abstract Task ErrorAsync(string text, [CallerMemberName]string callerName = null);
 
         public void Dispose()
         {
@@ -145,6 +147,8 @@ namespace SharpLog
             {
                 LogLevelState = LogLevelState.Warn;
             }
+
+            IsEnabled = true;
         }
 
         protected abstract void Dispose(bool disposing);

@@ -18,39 +18,40 @@ namespace SharpLog.Sample.Console
             var l = LogManager.CreateLogger<ConsoleLogger>();
 
             // Default level is Trace, on Debug builds, and Warn+Trace on Release.
-            LogManager.Log.Level = LogLevel.Error;
+            LogManager.Log.Level = LogLevel.Trace;
 
-            // Logging is disabled by default on release builds.
-            LogManager.Log.IsEnabled = true;
+            LogManager.Log.Critical("LM: Critical");
+            LogManager.Log.Error("LM: oops");
+            LogManager.Log.Warn("LM: warning, warning!!");
+            LogManager.Log.Info("LM: Hi!");
 
+            LogManager.Log.Debug("LM: deeeeug");
+            LogManager.Log.Trace("LM: Yollo");
 
-            LogManager.Log.Level = LogLevel.Info;
-
-            LogManager.Log.Critical("Critical");
-            LogManager.Log.Error("oops");
-            LogManager.Log.Warn("warning, warning!!");
-            LogManager.Log.Info("Hi!");
-
-            LogManager.Log.Debug("deeeeug");
-            LogManager.Log.Trace("Yollo");
-
-            l.Critical("This should work as well.");
+            l.Critical("DIRECT: This should work as well.");
 
             var newLogger = new ConsoleLogger();
             newLogger.Level = LogLevel.Trace;
             newLogger.IsEnabled = true;
-            newLogger.Info("SayHi!");
+            newLogger.Info("DIRECT: SayHi!");
 
             LogManager.AttachLogger(newLogger, "new");
 
             var again = LogManager.GetLogger("new");
-            again.Trace("TRACE Info");
+            again.Trace("INDIRECT: TRACE Info");
 
             LogManager.DisableAll();
 
-            again.Info("won't be printed..");
+            again.Info("INDIRECT: won't be printed..");
 
             LogManager.EnableAll();
+
+            var cl = new CompositeLogger();
+            cl.Level = LogLevel.Trace;
+
+            cl.AttachTarget(again);
+            cl.Critical("COMPOSITE: hi from composite!");
+            cl.Info("COMPOSITE: Info");
 
             again.Info("Bye bye!");
         }

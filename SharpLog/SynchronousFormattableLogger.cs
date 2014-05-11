@@ -20,6 +20,7 @@
 namespace SharpLog
 {
     using System;
+    using System.Runtime.CompilerServices;
     using System.Threading.Tasks;
 
     public abstract class SynchronousFormattableLogger : FormattableLogger

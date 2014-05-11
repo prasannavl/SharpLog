@@ -20,6 +20,7 @@
 namespace SharpLog
 {
     using System;
+    using System.Linq;
     using System.Reflection;
     using System.Threading;
 
@@ -30,13 +31,12 @@ namespace SharpLog
 
     public static class Global
     {
-
-        const string PlatformContainerTypeName = "Global";
+        private const string PlatformContainerTypeName = "Global";
         private const string PlatformContainerInstanceProperty = "Services";
-        const string AssemblyName = "SharpLog.Desktop";
+        private const string AssemblyName = "SharpLog.Desktop";
 
         private static Container servicesContainer;
-        public static readonly Type[] RequiredTypes =  { typeof(IConcurrentDictionary<,>) };
+        public static readonly Type[] RequiredTypes = { typeof(IConcurrentDictionary<,>) };
 
         public static Container Services
         {
@@ -87,23 +87,23 @@ namespace SharpLog
         private static Container GetPlatformContainer()
         {
             Container container = null;
-            try
-            {
-                var assembly = Assembly.Load(new AssemblyName(AssemblyName));
-                if (assembly != null && assembly.IsDefined(Type.GetType(PlatformContainerTypeName)))
-                {
+            var assembly = Assembly.Load(new AssemblyName(AssemblyName));
 
+            if (assembly != null)
+            {
+                try
+                {
                     container =
                         (Container)
-                        assembly.GetType(PlatformContainerTypeName)
-                            .GetRuntimeProperty(PlatformContainerInstanceProperty)
+                        assembly.DefinedTypes.Where(t => t.IsClass && t.Name == PlatformContainerTypeName)
+                            .Select(x => x.GetDeclaredProperty(PlatformContainerInstanceProperty))
+                            .FirstOrDefault()
                             .GetValue(null);
                 }
-                // ReSharper disable once EmptyGeneralCatchClause
-
-            }
-            catch
-            {
+                    // ReSharper disable once EmptyGeneralCatchClause
+                catch
+                {
+                }
             }
 
             return container ?? CreateDefaultContainer();

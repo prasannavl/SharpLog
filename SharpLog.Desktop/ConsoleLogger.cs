@@ -20,13 +20,14 @@
 namespace SharpLog.Desktop
 {
     using System;
+    using System.Runtime.CompilerServices;
 
     public class ConsoleLogger : SynchronousFormattableLogger
     {
         private ConsoleColor previousColorState;
         private ConsoleColor criticalColor = ConsoleColor.Red;
-        private ConsoleColor errorColor = ConsoleColor.DarkRed;
-        private ConsoleColor warnColor = ConsoleColor.Yellow;
+        private ConsoleColor errorColor = ConsoleColor.Yellow;
+        private ConsoleColor warnColor = ConsoleColor.Cyan;
         private ConsoleColor infoColor = ConsoleColor.Gray;
         private ConsoleColor debugColor = ConsoleColor.DarkGray;
         private ConsoleColor traceColor = ConsoleColor.White;

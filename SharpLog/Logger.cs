@@ -27,8 +27,7 @@ namespace SharpLog
     {
         protected Logger()
         {
-            // ReSharper disable once DoNotCallOverridableMethodsInConstructor
-            IsEnabled = true;
+
         }
 
         protected abstract void Execute(LogLevel level, string text, string callerName);
