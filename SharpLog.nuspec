@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+    <metadata>
+        <id>SharpLog</id>
+        <version>1.0.0</version>
+        <title>SharpLog</title>
+        <authors>Launchark,Prasanna V. Loganathar</authors>
+        <owners>Prasanna V. Loganathar</owners>
+        <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0.txt</licenseUrl>
+        <projectUrl>https://github.com/prasannavl/SharpLog</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>A simple high-peformance portable logging framework for .NET, which follows simple convention over configuration, and works with PCL.</description>
+        <summary>A simple high-peformance portable logging framework for .NET</summary>
+        <copyright>Copyright 2014</copyright>
+        <tags>log logging pcl logger framework</tags>
+        <dependencies>
+            <dependency id="SimpleInjector" version="2.5.0" />
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="SharpLog.Desktop\bin\Release\SharpLog.Desktop.dll" target="lib\net45\SharpLog.Desktop.dll" />
+        <file src="SharpLog\bin\Release\SharpLog.dll" target="lib\net45\SharpLog.dll" />
+        <file src="SharpLog\bin\Release\SharpLog.dll" target="lib\portable-net4+wp8+win8\SharpLog.dll" />
+    </files>
+</package>

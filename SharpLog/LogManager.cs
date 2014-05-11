@@ -53,19 +53,21 @@ namespace SharpLog
             }
         }
 
-        public static void EnableAll()
+        public static void EnableAll(bool enableTrace = true)
         {
             foreach (var logger in Loggers)
             {
                 logger.Value.IsEnabled = true;
+                if (enableTrace) logger.Value.IsTracingEnabled = true;
             }
         }
 
-        public static void DisableAll()
+        public static void DisableAll(bool disableTrace = true)
         {
             foreach (var logger in Loggers)
             {
                 logger.Value.IsEnabled = false;
+                if (disableTrace) logger.Value.IsTracingEnabled = false;
             }
         }
 
@@ -111,8 +113,11 @@ namespace SharpLog
 
         public static void DetachLogger(ILogger logger, bool dispose = true)
         {
+            var currentLog = log;
             foreach (var target in Loggers.Where(x => x.Value == logger).ToArray())
             {
+                if (currentLog == target.Value) log = NullLogger;
+
                 Loggers.Remove(target.Key);
                 if (dispose)
                 {
@@ -151,6 +156,8 @@ namespace SharpLog
             {
                 Loggers.Clear();
             }
+
+            Log = NullLogger;
         }
 
         public static T CreateLogger<T>() where T : ILogger

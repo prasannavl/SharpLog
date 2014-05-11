@@ -4,10 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharpLog.Desktop.PortablilityScaffolds
+namespace SharpLog.PortablilityScaffolds
 {
-    using SharpLog.PortablilityScaffolds;
-
     internal class ConcurrentDictionaryFacade<TKey, TValue> : ConcurrentDictionary<TKey, TValue>
     {
         public ConcurrentDictionaryFacade() {}

@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLog", "SharpLog\SharpL
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLog.Desktop", "SharpLog.Desktop\SharpLog.Desktop.csproj", "{AED41902-6766-405B-933D-2E4DEAD8EF99}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpLog.Sample.Console", "SharpLog.Sample.Console\SharpLog.Sample.Console.csproj", "{F3195DB6-860E-4FF1-B1D0-18F859141B30}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{AED41902-6766-405B-933D-2E4DEAD8EF99}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AED41902-6766-405B-933D-2E4DEAD8EF99}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AED41902-6766-405B-933D-2E4DEAD8EF99}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3195DB6-860E-4FF1-B1D0-18F859141B30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3195DB6-860E-4FF1-B1D0-18F859141B30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3195DB6-860E-4FF1-B1D0-18F859141B30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3195DB6-860E-4FF1-B1D0-18F859141B30}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

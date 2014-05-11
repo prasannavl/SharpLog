@@ -79,7 +79,7 @@ namespace SharpLog
         private static Container CreateDefaultContainer()
         {
             var container = new Container();
-            container.RegisterOpenGeneric(typeof(IConcurrentDictionary<,>), typeof(ConcurrentDictionary<,>));
+            container.RegisterOpenGeneric(typeof(IConcurrentDictionary<,>), typeof(ConcurrentDictionaryFacade<,>));
             container.Verify();
             return container;
         }
@@ -87,20 +87,23 @@ namespace SharpLog
         private static Container GetPlatformContainer()
         {
             Container container = null;
-
-            var assembly = Assembly.Load(new AssemblyName(AssemblyName));
-            if (assembly != null && assembly.IsDefined(Type.GetType(PlatformContainerTypeName)))
+            try
             {
-                try
+                var assembly = Assembly.Load(new AssemblyName(AssemblyName));
+                if (assembly != null && assembly.IsDefined(Type.GetType(PlatformContainerTypeName)))
                 {
+
                     container =
                         (Container)
                         assembly.GetType(PlatformContainerTypeName)
                             .GetRuntimeProperty(PlatformContainerInstanceProperty)
                             .GetValue(null);
                 }
-                    // ReSharper disable once EmptyGeneralCatchClause
-                catch { }
+                // ReSharper disable once EmptyGeneralCatchClause
+
+            }
+            catch
+            {
             }
 
             return container ?? CreateDefaultContainer();

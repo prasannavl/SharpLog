@@ -41,14 +41,15 @@
     <Compile Include="Global.cs" />
     <Compile Include="LogManager.cs" />
     <Compile Include="NullLogger.cs" />
-    <Compile Include="PortableScaffolds\ConcurrentDictionary.cs" />
+    <Compile Include="PortablilityScaffolds\ConcurrentDictionary.cs" />
     <Compile Include="FormattableLogger.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="ILogger.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="LoggerBase.cs" />
     <Compile Include="LogLevel.cs" />
-    <Compile Include="PortableScaffolds\IConcurrentDictionary.cs" />
+    <Compile Include="PortablilityScaffolds\ConcurrentDictionaryFacade.cs" />
+    <Compile Include="PortablilityScaffolds\IConcurrentDictionary.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SynchronousFormattableLogger.cs" />
     <Compile Include="SynchronousLogger.cs" />
@@ -59,9 +60,6 @@
     </Reference>
     <Reference Include="SimpleInjector.Diagnostics">
       <HintPath>..\packages\SimpleInjector.2.5.0\lib\portable-net4+sl4+wp8+win8\SimpleInjector.Diagnostics.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Collections.Immutable">
-      <HintPath>..\packages\Microsoft.Bcl.Immutable.1.0.34\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
