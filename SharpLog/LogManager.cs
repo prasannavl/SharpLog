@@ -26,17 +26,17 @@ namespace SharpLog
 
     using SharpLog.PortableScaffolds;
 
-    public class LogManager
+    public static class LogManager
     {
-        private readonly IConcurrentDictionary<string, ILogger> loggers;
-        private ILogger log;
+        private static readonly IConcurrentDictionary<string, ILogger> loggers;
+        private static ILogger log;
 
-        public LogManager()
+        static LogManager()
         {
             loggers = Global.Services.GetInstance<IConcurrentDictionary<string, ILogger>>();
         }
 
-        public ILogger Log
+        public static ILogger Log
         {
             get
             {
@@ -52,12 +52,12 @@ namespace SharpLog
             }
         }
 
-        private void SetDefaultLogger(ILogger logger)
+        private static void SetDefaultLogger(ILogger logger)
         {
             log = logger;
         }
 
-        public bool AttachLogger(ILogger logger, string name = null)
+        public static bool AttachLogger(ILogger logger, string name = null)
         {
             if (name == null)
             {
@@ -70,7 +70,7 @@ namespace SharpLog
             return loggers.TryAdd(name, logger);
         }
 
-        public void DetachLogger(string name, bool dispose = true)
+        public static void DetachLogger(string name, bool dispose = true)
         {
             if (name == null)
             {
@@ -92,7 +92,7 @@ namespace SharpLog
             }
         }
 
-        public void DetachLogger(ILogger logger, bool dispose = true)
+        public static void DetachLogger(ILogger logger, bool dispose = true)
         {
             foreach (var target in loggers.Where(x => x.Value == logger).ToArray())
             {
@@ -104,12 +104,12 @@ namespace SharpLog
             }
         }
 
-        public virtual IEnumerable<KeyValuePair<string, ILogger>> GetAllLoggers()
+        public static IEnumerable<KeyValuePair<string, ILogger>> GetAllLoggers()
         {
             return loggers;
         }
 
-        public virtual ILogger GetLogger(string name)
+        public static ILogger GetLogger(string name)
         {
             ILogger logger = null;
             if (loggers.ContainsKey(name))
@@ -120,7 +120,7 @@ namespace SharpLog
             return logger;
         }
 
-        public void ClearAllLoggers(bool dispose = true)
+        public static void ClearAllLoggers(bool dispose = true)
         {
             if (dispose)
             {
@@ -136,14 +136,14 @@ namespace SharpLog
             }
         }
 
-        public T CreateLogger<T>() where T : ILogger
+        public static T CreateLogger<T>() where T : ILogger
         {
             var logger = (T)Activator.CreateInstance(typeof(T));
             AttachLogger(logger);
             return logger;
         }
 
-        public T CreateLogger<T>(params object[] arguments) where T : ILogger
+        public static T CreateLogger<T>(params object[] arguments) where T : ILogger
         {
             var logger = (T)Activator.CreateInstance(typeof(T), arguments);
             AttachLogger(logger);

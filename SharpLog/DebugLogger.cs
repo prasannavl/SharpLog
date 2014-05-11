@@ -45,7 +45,6 @@ namespace SharpLog
 
         protected override void Dispose(bool disposing)
         {
-            
         }
     }
 }

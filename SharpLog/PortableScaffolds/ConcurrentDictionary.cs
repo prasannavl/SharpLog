@@ -601,13 +601,13 @@ namespace SharpLog.PortableScaffolds
             }
         }
     }
-    
 
     public class ConcurrentDictionary<TKey, TValue> : ICollection<KeyValuePair<TKey, TValue>>,
                                                       IEnumerable<KeyValuePair<TKey, TValue>>,
                                                       IDictionary,
                                                       ICollection,
-                                                      IEnumerable, IConcurrentDictionary<TKey, TValue>
+                                                      IEnumerable,
+                                                      IConcurrentDictionary<TKey, TValue>
     {
         private IEqualityComparer<TKey> comparer;
 
@@ -660,12 +660,196 @@ namespace SharpLog.PortableScaffolds
         {
         }
 
+        void ICollection<KeyValuePair<TKey, TValue>>.Add(KeyValuePair<TKey, TValue> pair)
+        {
+            Add(pair.Key, pair.Value);
+        }
+
+        bool ICollection<KeyValuePair<TKey, TValue>>.Remove(KeyValuePair<TKey, TValue> pair)
+        {
+            return Remove(pair.Key);
+        }
+
+        bool ICollection<KeyValuePair<TKey, TValue>>.Contains(KeyValuePair<TKey, TValue> pair)
+        {
+            return ContainsKey(pair.Key);
+        }
+
+        public void Clear()
+        {
+            // Pronk
+            internalDictionary = new SplitOrderedList<TKey, KeyValuePair<TKey, TValue>>(comparer);
+        }
+
+        public int Count
+        {
+            get
+            {
+                return internalDictionary.Count;
+            }
+        }
+
+        bool ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        void ICollection<KeyValuePair<TKey, TValue>>.CopyTo(KeyValuePair<TKey, TValue>[] array, int startIndex)
+        {
+            CopyTo(array, startIndex);
+        }
+
+        public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
+        {
+            return GetEnumeratorInternal();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return (IEnumerator)GetEnumeratorInternal();
+        }
+
         public bool IsEmpty
         {
             get
             {
                 return Count == 0;
             }
+        }
+
+        void IDictionary<TKey, TValue>.Add(TKey key, TValue value)
+        {
+            Add(key, value);
+        }
+
+        public bool TryGetValue(TKey key, out TValue value)
+        {
+            CheckKey(key);
+            KeyValuePair<TKey, TValue> pair;
+            bool result = internalDictionary.Find(Hash(key), key, out pair);
+            value = pair.Value;
+
+            return result;
+        }
+
+        public TValue this[TKey key]
+        {
+            get
+            {
+                return GetValue(key);
+            }
+            set
+            {
+                AddOrUpdate(key, value, value);
+            }
+        }
+
+        bool IDictionary<TKey, TValue>.Remove(TKey key)
+        {
+            return Remove(key);
+        }
+
+        public bool ContainsKey(TKey key)
+        {
+            CheckKey(key);
+            KeyValuePair<TKey, TValue> dummy;
+            return internalDictionary.Find(Hash(key), key, out dummy);
+        }
+
+        public ICollection<TKey> Keys
+        {
+            get
+            {
+                return GetPart<TKey>((kvp) => kvp.Key);
+            }
+        }
+
+        public ICollection<TValue> Values
+        {
+            get
+            {
+                return GetPart<TValue>((kvp) => kvp.Value);
+            }
+        }
+
+        public bool TryAdd(TKey key, TValue value)
+        {
+            CheckKey(key);
+            return internalDictionary.Insert(Hash(key), key, Make(key, value));
+        }
+
+        public TValue AddOrUpdate(
+            TKey key,
+            Func<TKey, TValue> addValueFactory,
+            Func<TKey, TValue, TValue> updateValueFactory)
+        {
+            CheckKey(key);
+            if (addValueFactory == null)
+            {
+                throw new ArgumentNullException("addValueFactory");
+            }
+            if (updateValueFactory == null)
+            {
+                throw new ArgumentNullException("updateValueFactory");
+            }
+            return
+                internalDictionary.InsertOrUpdate(
+                    Hash(key),
+                    key,
+                    () => Make(key, addValueFactory(key)),
+                    (e) => Make(key, updateValueFactory(key, e.Value))).Value;
+        }
+
+        public TValue AddOrUpdate(TKey key, TValue addValue, Func<TKey, TValue, TValue> updateValueFactory)
+        {
+            return AddOrUpdate(key, (_) => addValue, updateValueFactory);
+        }
+
+        public bool TryUpdate(TKey key, TValue newValue, TValue comparisonValue)
+        {
+            CheckKey(key);
+            return internalDictionary.CompareExchange(
+                Hash(key),
+                key,
+                Make(key, newValue),
+                (e) => e.Value.Equals(comparisonValue));
+        }
+
+        public TValue GetOrAdd(TKey key, Func<TKey, TValue> valueFactory)
+        {
+            CheckKey(key);
+            return
+                internalDictionary.InsertOrGet(
+                    Hash(key),
+                    key,
+                    Make(key, default(TValue)),
+                    () => Make(key, valueFactory(key))).Value;
+        }
+
+        public TValue GetOrAdd(TKey key, TValue value)
+        {
+            CheckKey(key);
+            return internalDictionary.InsertOrGet(Hash(key), key, Make(key, value), null).Value;
+        }
+
+        public bool TryRemove(TKey key, out TValue value)
+        {
+            CheckKey(key);
+            KeyValuePair<TKey, TValue> data;
+            bool result = internalDictionary.Delete(Hash(key), key, out data);
+            value = data.Value;
+            return result;
+        }
+
+        public KeyValuePair<TKey, TValue>[] ToArray()
+        {
+            // This is most certainly not optimum but there is
+            // not a lot of possibilities
+
+            return new List<KeyValuePair<TKey, TValue>>(this).ToArray();
         }
 
         bool IDictionary.Contains(object key)
@@ -784,113 +968,6 @@ namespace SharpLog.PortableScaffolds
             }
         }
 
-        void IDictionary<TKey, TValue>.Add(TKey key, TValue value)
-        {
-            Add(key, value);
-        }
-
-        void ICollection<KeyValuePair<TKey, TValue>>.Add(KeyValuePair<TKey, TValue> pair)
-        {
-            Add(pair.Key, pair.Value);
-        }
-
-        public bool TryGetValue(TKey key, out TValue value)
-        {
-            CheckKey(key);
-            KeyValuePair<TKey, TValue> pair;
-            bool result = internalDictionary.Find(Hash(key), key, out pair);
-            value = pair.Value;
-
-            return result;
-        }
-
-        public TValue this[TKey key]
-        {
-            get
-            {
-                return GetValue(key);
-            }
-            set
-            {
-                AddOrUpdate(key, value, value);
-            }
-        }
-
-        bool IDictionary<TKey, TValue>.Remove(TKey key)
-        {
-            return Remove(key);
-        }
-
-        bool ICollection<KeyValuePair<TKey, TValue>>.Remove(KeyValuePair<TKey, TValue> pair)
-        {
-            return Remove(pair.Key);
-        }
-
-        public bool ContainsKey(TKey key)
-        {
-            CheckKey(key);
-            KeyValuePair<TKey, TValue> dummy;
-            return internalDictionary.Find(Hash(key), key, out dummy);
-        }
-
-        bool ICollection<KeyValuePair<TKey, TValue>>.Contains(KeyValuePair<TKey, TValue> pair)
-        {
-            return ContainsKey(pair.Key);
-        }
-
-        public void Clear()
-        {
-            // Pronk
-            internalDictionary = new SplitOrderedList<TKey, KeyValuePair<TKey, TValue>>(comparer);
-        }
-
-        public int Count
-        {
-            get
-            {
-                return internalDictionary.Count;
-            }
-        }
-
-        bool ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly
-        {
-            get
-            {
-                return false;
-            }
-        }
-
-        public ICollection<TKey> Keys
-        {
-            get
-            {
-                return GetPart<TKey>((kvp) => kvp.Key);
-            }
-        }
-
-        public ICollection<TValue> Values
-        {
-            get
-            {
-                return GetPart<TValue>((kvp) => kvp.Value);
-            }
-        }
-
-        void ICollection<KeyValuePair<TKey, TValue>>.CopyTo(KeyValuePair<TKey, TValue>[] array, int startIndex)
-        {
-            CopyTo(array, startIndex);
-        }
-
-        public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
-        {
-            return GetEnumeratorInternal();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return (IEnumerator)GetEnumeratorInternal();
-        }
-
         private void CheckKey(TKey key)
         {
             if (key == null)
@@ -905,39 +982,6 @@ namespace SharpLog.PortableScaffolds
             {
                 ;
             }
-        }
-
-        public bool TryAdd(TKey key, TValue value)
-        {
-            CheckKey(key);
-            return internalDictionary.Insert(Hash(key), key, Make(key, value));
-        }
-
-        public TValue AddOrUpdate(
-            TKey key,
-            Func<TKey, TValue> addValueFactory,
-            Func<TKey, TValue, TValue> updateValueFactory)
-        {
-            CheckKey(key);
-            if (addValueFactory == null)
-            {
-                throw new ArgumentNullException("addValueFactory");
-            }
-            if (updateValueFactory == null)
-            {
-                throw new ArgumentNullException("updateValueFactory");
-            }
-            return
-                internalDictionary.InsertOrUpdate(
-                    Hash(key),
-                    key,
-                    () => Make(key, addValueFactory(key)),
-                    (e) => Make(key, updateValueFactory(key, e.Value))).Value;
-        }
-
-        public TValue AddOrUpdate(TKey key, TValue addValue, Func<TKey, TValue, TValue> updateValueFactory)
-        {
-            return AddOrUpdate(key, (_) => addValue, updateValueFactory);
         }
 
         private TValue AddOrUpdate(TKey key, TValue addValue, TValue updateValue)
@@ -956,55 +1000,11 @@ namespace SharpLog.PortableScaffolds
             return temp;
         }
 
-        public bool TryUpdate(TKey key, TValue newValue, TValue comparisonValue)
-        {
-            CheckKey(key);
-            return internalDictionary.CompareExchange(
-                Hash(key),
-                key,
-                Make(key, newValue),
-                (e) => e.Value.Equals(comparisonValue));
-        }
-
-        public TValue GetOrAdd(TKey key, Func<TKey, TValue> valueFactory)
-        {
-            CheckKey(key);
-            return
-                internalDictionary.InsertOrGet(
-                    Hash(key),
-                    key,
-                    Make(key, default(TValue)),
-                    () => Make(key, valueFactory(key))).Value;
-        }
-
-        public TValue GetOrAdd(TKey key, TValue value)
-        {
-            CheckKey(key);
-            return internalDictionary.InsertOrGet(Hash(key), key, Make(key, value), null).Value;
-        }
-
-        public bool TryRemove(TKey key, out TValue value)
-        {
-            CheckKey(key);
-            KeyValuePair<TKey, TValue> data;
-            bool result = internalDictionary.Delete(Hash(key), key, out data);
-            value = data.Value;
-            return result;
-        }
-
         private bool Remove(TKey key)
         {
             TValue dummy;
 
             return TryRemove(key, out dummy);
-        }
-
-        public KeyValuePair<TKey, TValue>[] ToArray()
-        {
-            // This is most certainly not optimum but there is
-            // not a lot of possibilities
-
-            return new List<KeyValuePair<TKey, TValue>>(this).ToArray();
         }
 
         private ICollection<T> GetPart<T>(Func<KeyValuePair<TKey, TValue>, T> extractor)
