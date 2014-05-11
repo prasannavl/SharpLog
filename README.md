@@ -1,7 +1,9 @@
 SharpLog
 ========
 
-A PCL Library for logging.
+NuGet:
+
+> Install-Package SharpLog 
 
 What 
 ---
