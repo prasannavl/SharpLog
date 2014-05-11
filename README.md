@@ -37,6 +37,7 @@ I'll keep adding more loggers as I need them, including Bufferred, File-based, m
 
 - XAML-based overlay logger (So, it works on all platforms)
 - Network logger and a receiver GUI over network.
+- OpenGL based overlay logger
 
 Cheers.
 
