@@ -5,7 +5,7 @@ NuGet:
 
 > Install-Package SharpLog 
 
-What 
+What
 ---
 
 A simple high-peformance portable logging framework for .NET
@@ -30,6 +30,62 @@ If you find something lacking, just use one of the abstract classes as starting 
 And feel free to contribute tid-bits. :) 
 
 I'll keep adding more loggers as I need them, including Bufferred, File-based, memory-based, network-based loggers.
+
+Example
+---
+
+            // Automatically attached to Log Manager, and also sets it as the default logger to be used
+            // from LogManager.Log
+
+            var l = LogManager.CreateLogger<ConsoleLogger>();
+
+            // Default level is Trace, on Debug builds, and Warn+Trace on Release.
+            LogManager.Logger.Level = LogLevel.Trace;
+
+            // Calling the default logger:
+
+            LogManager.Log("Hello");
+            LogManager.LogAsync("Log the same async.");
+            LogManager.Log(LogLevel.Critical, "This is critical!");
+
+            // Alternate ways:
+
+            // Exactly the same as above. This is how the above is implemented internally.
+
+            LogManager.Logger.Critical("LM: Critical");
+            LogManager.Logger.Error("LM: oops");
+            LogManager.Logger.Warn("LM: warning, warning!!");
+            LogManager.Logger.Info("LM: Hi!");
+
+            LogManager.Logger.Debug("LM: Some debug data.");
+            LogManager.Logger.Trace("LM: Yello");
+
+            l.Critical("DIRECT: This should work as well.");
+
+            var newLogger = new ConsoleLogger();
+            newLogger.Level = LogLevel.Trace;
+            newLogger.IsEnabled = true;
+            newLogger.Info("DIRECT: SayHi!");
+
+            LogManager.AttachLogger(newLogger, "new");
+
+            var oldConsoleLogger = LogManager.GetLogger("new");
+            oldConsoleLogger.Trace("INDIRECT: TRACE Info");
+
+            LogManager.DisableAll();
+
+            oldConsoleLogger.Info("INDIRECT: won't be printed..");
+
+            LogManager.EnableAll();
+
+            var cl = new CompositeLogger();
+            cl.Level = LogLevel.Trace;
+
+            cl.AttachTarget(oldConsoleLogger);
+            cl.Critical("COMPOSITE: hi from composite!");
+            cl.Info("COMPOSITE: Info");
+
+            oldConsoleLogger.Info("Bye bye!");
 
 ---
 
