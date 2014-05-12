@@ -19,13 +19,12 @@
 
 namespace SharpLog
 {
-    using System;
     using System.Runtime.CompilerServices;
     using System.Threading.Tasks;
 
     public abstract class SynchronousLogger : Logger
     {
-        protected override Task ExecuteAsync(LogLevel level, string text, [CallerMemberName]string callerName = null)
+        protected override Task ExecuteAsync(LogLevel level, string text, [CallerMemberName] string callerName = null)
         {
             return Task.Run(() => Execute(level, text, callerName));
         }

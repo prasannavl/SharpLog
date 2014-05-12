@@ -20,7 +20,6 @@
 namespace SharpLog.Desktop
 {
     using System;
-    using System.Runtime.CompilerServices;
 
     public class ConsoleLogger : SynchronousFormattableLogger
     {

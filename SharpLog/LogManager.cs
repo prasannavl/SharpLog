@@ -22,7 +22,9 @@ namespace SharpLog
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Runtime.CompilerServices;
     using System.Threading;
+    using System.Threading.Tasks;
 
     using SharpLog.PortablilityScaffolds;
 
@@ -30,26 +32,80 @@ namespace SharpLog
     {
         private static readonly IConcurrentDictionary<string, ILogger> Loggers;
         public static readonly ILogger NullLogger = new NullLogger();
-        private static ILogger log;
+        private static ILogger defaultLogger;
 
         static LogManager()
         {
             Loggers = Global.Services.GetInstance<IConcurrentDictionary<string, ILogger>>();
         }
 
-        public static ILogger Log
+        public static ILogger Logger
         {
             get
             {
-                if (log == null)
+                if (defaultLogger == null)
                 {
-                    Interlocked.CompareExchange(ref log, NullLogger, null);
+                    Interlocked.CompareExchange(ref defaultLogger, NullLogger, null);
                 }
-                return log;
+                return defaultLogger;
             }
             set
             {
                 SetDefaultLogger(value);
+            }
+        }
+
+        public static void Log(string text, [CallerMemberName] string callerName = null)
+        {
+            Logger.Info(text, callerName);
+        }
+
+        public static void Log(LogLevel level, string text, [CallerMemberName] string callerName = null)
+        {
+            switch (level)
+            {
+                case LogLevel.Critical:
+                    Logger.Critical(text, callerName);
+                    break;
+                case LogLevel.Error:
+                    Logger.Error(text, callerName);
+                    break;
+                case LogLevel.Warn:
+                    Logger.Warn(text, callerName);
+                    break;
+                case LogLevel.Info:
+                    Logger.Info(text, callerName);
+                    break;
+                case LogLevel.Debug:
+                    Logger.Debug(text, callerName);
+                    break;
+                default:
+                    Logger.Trace(text, callerName);
+                    break;
+            }
+        }
+
+        public static Task LogAsync(string text, [CallerMemberName] string callerName = null)
+        {
+            return Logger.InfoAsync(text, callerName);
+        }
+
+        public static Task LogAsync(LogLevel level, string text, [CallerMemberName] string callerName = null)
+        {
+            switch (level)
+            {
+                case LogLevel.Critical:
+                    return Logger.CriticalAsync(text, callerName);
+                case LogLevel.Error:
+                    return Logger.ErrorAsync(text, callerName);
+                case LogLevel.Warn:
+                    return Logger.WarnAsync(text, callerName);
+                case LogLevel.Info:
+                    return Logger.InfoAsync(text, callerName);
+                case LogLevel.Debug:
+                    return Logger.DebugAsync(text, callerName);
+                default:
+                    return Logger.TraceAsync(text, callerName);
             }
         }
 
@@ -58,7 +114,10 @@ namespace SharpLog
             foreach (var logger in Loggers)
             {
                 logger.Value.IsEnabled = true;
-                if (enableTrace) logger.Value.IsTracingEnabled = true;
+                if (enableTrace)
+                {
+                    logger.Value.IsTracingEnabled = true;
+                }
             }
         }
 
@@ -67,13 +126,16 @@ namespace SharpLog
             foreach (var logger in Loggers)
             {
                 logger.Value.IsEnabled = false;
-                if (disableTrace) logger.Value.IsTracingEnabled = false;
+                if (disableTrace)
+                {
+                    logger.Value.IsTracingEnabled = false;
+                }
             }
         }
 
         private static void SetDefaultLogger(ILogger logger)
         {
-            log = logger;
+            defaultLogger = logger;
         }
 
         public static bool AttachLogger(ILogger logger, string name = null)
@@ -82,7 +144,7 @@ namespace SharpLog
             {
                 name = Guid.NewGuid().ToString();
             }
-            if (log == null)
+            if (defaultLogger == null)
             {
                 SetDefaultLogger(logger);
             }
@@ -113,10 +175,13 @@ namespace SharpLog
 
         public static void DetachLogger(ILogger logger, bool dispose = true)
         {
-            var currentLog = log;
+            var currentLog = logger;
             foreach (var target in Loggers.Where(x => x.Value == logger).ToArray())
             {
-                if (currentLog == target.Value) log = NullLogger;
+                if (currentLog == target.Value)
+                {
+                    defaultLogger = NullLogger;
+                }
 
                 Loggers.Remove(target.Key);
                 if (dispose)
@@ -157,7 +222,7 @@ namespace SharpLog
                 Loggers.Clear();
             }
 
-            Log = NullLogger;
+            Logger = NullLogger;
         }
 
         public static T CreateLogger<T>() where T : ILogger

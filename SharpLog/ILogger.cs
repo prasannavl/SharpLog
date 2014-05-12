@@ -30,18 +30,18 @@ namespace SharpLog
         bool IsSynchronized { get; }
         LogLevel Level { get; set; }
 
-        void Critical(string text, [CallerMemberName]string callerName = null);
-        void Error(string text, [CallerMemberName]string callerName = null);
-        void Warn(string text, [CallerMemberName]string callerName = null);
-        void Info(string text, [CallerMemberName]string callerName = null);
-        void Debug(string text, [CallerMemberName]string callerName = null);
-        void Trace(string text, [CallerMemberName]string callerName = null);
+        void Critical(string text, [CallerMemberName] string callerName = null);
+        void Error(string text, [CallerMemberName] string callerName = null);
+        void Warn(string text, [CallerMemberName] string callerName = null);
+        void Info(string text, [CallerMemberName] string callerName = null);
+        void Debug(string text, [CallerMemberName] string callerName = null);
+        void Trace(string text, [CallerMemberName] string callerName = null);
 
-        Task CriticalAsync(string text, [CallerMemberName]string callerName = null);
-        Task ErrorAsync(string text, [CallerMemberName]string callerName = null);
-        Task WarnAsync(string text, [CallerMemberName]string callerName = null);
-        Task InfoAsync(string text, [CallerMemberName]string callerName = null);
-        Task DebugAsync(string text, [CallerMemberName]string callerName = null);
-        Task TraceAsync(string text, [CallerMemberName]string callerName = null);
+        Task CriticalAsync(string text, [CallerMemberName] string callerName = null);
+        Task ErrorAsync(string text, [CallerMemberName] string callerName = null);
+        Task WarnAsync(string text, [CallerMemberName] string callerName = null);
+        Task InfoAsync(string text, [CallerMemberName] string callerName = null);
+        Task DebugAsync(string text, [CallerMemberName] string callerName = null);
+        Task TraceAsync(string text, [CallerMemberName] string callerName = null);
     }
 }

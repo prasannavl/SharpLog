@@ -116,19 +116,19 @@ namespace SharpLog
             }
         }
 
-        public abstract void Critical(string text, [CallerMemberName]string callerName = null);
-        public abstract void Error(string text, [CallerMemberName]string callerName = null);
-        public abstract void Warn(string text, [CallerMemberName]string callerName = null);
-        public abstract void Info(string text, [CallerMemberName]string callerName = null);
-        public abstract void Debug(string text, [CallerMemberName]string callerName = null);
-        public abstract void Trace(string text, [CallerMemberName]string callerName = null);
+        public abstract void Critical(string text, [CallerMemberName] string callerName = null);
+        public abstract void Error(string text, [CallerMemberName] string callerName = null);
+        public abstract void Warn(string text, [CallerMemberName] string callerName = null);
+        public abstract void Info(string text, [CallerMemberName] string callerName = null);
+        public abstract void Debug(string text, [CallerMemberName] string callerName = null);
+        public abstract void Trace(string text, [CallerMemberName] string callerName = null);
 
-        public abstract Task CriticalAsync(string text, [CallerMemberName]string callerName = null);
-        public abstract Task WarnAsync(string text, [CallerMemberName]string callerName = null);
-        public abstract Task InfoAsync(string text, [CallerMemberName]string callerName = null);
-        public abstract Task DebugAsync(string text, [CallerMemberName]string callerName = null);
-        public abstract Task TraceAsync(string text, [CallerMemberName]string callerName = null);
-        public abstract Task ErrorAsync(string text, [CallerMemberName]string callerName = null);
+        public abstract Task CriticalAsync(string text, [CallerMemberName] string callerName = null);
+        public abstract Task WarnAsync(string text, [CallerMemberName] string callerName = null);
+        public abstract Task InfoAsync(string text, [CallerMemberName] string callerName = null);
+        public abstract Task DebugAsync(string text, [CallerMemberName] string callerName = null);
+        public abstract Task TraceAsync(string text, [CallerMemberName] string callerName = null);
+        public abstract Task ErrorAsync(string text, [CallerMemberName] string callerName = null);
 
         public void Dispose()
         {

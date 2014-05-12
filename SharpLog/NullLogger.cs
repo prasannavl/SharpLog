@@ -19,7 +19,6 @@
 
 namespace SharpLog
 {
-    using System;
     using System.Threading.Tasks;
 
     public class NullLogger : ILogger
@@ -74,7 +73,6 @@ namespace SharpLog
         public void Error(string text, string callerName = null)
         {
         }
-
 
         public void Warn(string text, string callerName = null)
         {

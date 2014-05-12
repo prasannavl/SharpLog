@@ -19,8 +19,6 @@
 
 namespace SharpLog
 {
-    using System;
-
     public class DebugLogger : SynchronousFormattableLogger
     {
         public override string Format(string text, LogLevel level, string callerName)
