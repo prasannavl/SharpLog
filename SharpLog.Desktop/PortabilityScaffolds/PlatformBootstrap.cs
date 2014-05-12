@@ -15,32 +15,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //  
-// Created: 5:31 PM 11-05-2014
+// Created: 1:49 AM 13-05-2014
 
-namespace SharpLog.Desktop
+namespace SharpLog.Desktop.PortabilityScaffolds
 {
-    using SharpLog.Desktop.PortablilityScaffolds;
-    using SharpLog.PortablilityScaffolds;
+    using SharpLog.PortabilityScaffolds;
 
     using SimpleInjector;
-    using SimpleInjector.Extensions;
 
-    public static class Global
+    // TODO: Use open generics instead of concrete generic parameters after SimpleInjector issue #20948 is fixed.
+    public class PlatformBootstrap : IPlatformBootstrap
     {
-        public static Container Services
+        public void RegisterPlatformServices(Container container)
         {
-            get
-            {
-                return GetPlatformContainer();
-            }
-        }
-
-        private static Container GetPlatformContainer()
-        {
-            var container = new Container();
-            container.RegisterOpenGeneric(typeof(IConcurrentDictionary<,>), typeof(ConcurrentDictionaryFacade<,>));
-            container.Verify();
-            return container;
+            container.Register(
+                typeof(IConcurrentDictionary<string, ILogger>),
+                typeof(ConcurrentDictionaryFacade<string, ILogger>));
         }
     }
 }

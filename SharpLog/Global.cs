@@ -20,95 +20,65 @@
 namespace SharpLog
 {
     using System;
-    using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
     using System.Threading;
 
-    using SharpLog.PortablilityScaffolds;
+    using SharpLog.PortabilityScaffolds;
 
     using SimpleInjector;
-    using SimpleInjector.Extensions;
 
     public static class Global
     {
-        private const string PlatformContainerTypeName = "Global";
-        private const string PlatformContainerInstanceProperty = "Services";
-        private const string AssemblyName = "SharpLog.Desktop";
+        private static readonly string[] PlatformSupportAssemblyNames = { "SharpLog.Desktop" };
 
-        private static Container servicesContainer;
-        public static readonly Type[] RequiredTypes = { typeof(IConcurrentDictionary<,>) };
+        private static Container container;
 
-        public static Container Services
+        public static Container Container
         {
             get
             {
-                if (servicesContainer == null)
+                if (container == null)
                 {
-                    Interlocked.CompareExchange(ref servicesContainer, GetPlatformContainer(), null);
+                    Interlocked.CompareExchange(ref container, ConstructPlatformContainer(), null);
                 }
-                return servicesContainer;
+                return container;
             }
             set
             {
-                if (VerfiyDefaultServices(value))
-                {
-                    servicesContainer = value;
-                }
-                else
-                {
-                    throw new ArgumentException(
-                        "Services do not contain registrations for all required services",
-                        "value");
-                }
+                container = value;
             }
         }
 
-        private static bool VerfiyDefaultServices(Container container)
+        private static Container ConstructPlatformContainer()
         {
-            foreach (var type in RequiredTypes)
+            var platformContainer = new Container();
+            platformContainer.Options.AllowOverridingRegistrations = true;
+
+            var platformBootstrapperTypeInfoCache = typeof(IPlatformBootstrap).GetTypeInfo();
+
+            var defaultBootStrapper = new DefaultBootstrap();
+            defaultBootStrapper.RegisterPlatformServices(platformContainer);
+
+            foreach (var assemblyName in PlatformSupportAssemblyNames)
             {
-                if (container.GetRegistration(type) == null)
+                var assembly = Assembly.Load(new AssemblyName(assemblyName));
+                if (assembly != null)
                 {
-                    return false;
+                    var bootstrapper =
+                        (IPlatformBootstrap)
+                        assembly.DefinedTypes.Where(platformBootstrapperTypeInfoCache.IsAssignableFrom)
+                            .Select(x => Activator.CreateInstance(x.AsType()))
+                            .FirstOrDefault();
+                    if (bootstrapper != null)
+                    {
+                        bootstrapper.RegisterPlatformServices(platformContainer);
+                    }
                 }
             }
 
-            return true;
-        }
-
-        private static Container CreateDefaultContainer()
-        {
-            var container = new Container();
-            container.RegisterOpenGeneric(typeof(IConcurrentDictionary<,>), typeof(ConcurrentDictionaryFacade<,>));
-            container.Verify();
-            return container;
-        }
-
-        private static Container GetPlatformContainer()
-        {
-            Container container = null;
-            var assembly = Assembly.Load(new AssemblyName(AssemblyName));
-
-            if (assembly != null)
-            {
-                try
-                {
-                    container =
-                        (Container)
-                        assembly.DefinedTypes.Where(t => t.IsClass && t.Name == PlatformContainerTypeName)
-                            .Select(x => x.GetDeclaredProperty(PlatformContainerInstanceProperty))
-                            .FirstOrDefault()
-                            .GetValue(null);
-                }
-                    // ReSharper disable once EmptyGeneralCatchClause
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex.Message);
-                }
-            }
-
-            return container ?? CreateDefaultContainer();
+            platformContainer.Verify();
+            return platformContainer;
         }
     }
 }

@@ -19,6 +19,8 @@
 
 namespace SharpLog.Sample.Console
 {
+    using System.Reflection;
+
     using SharpLog.Desktop;
 
     internal class Program

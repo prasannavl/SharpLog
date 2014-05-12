@@ -1,5 +1,5 @@
 ﻿// Author: Prasanna V. Loganathar
-// Project: SharpLog.Desktop
+// Project: SharpLog
 // 
 // Copyright 2014 Launchark. All Rights Reserved.
 // 
@@ -15,16 +15,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //  
-// Created: 5:35 PM 11-05-2014
+// Created: 2:59 AM 13-05-2014
 
-namespace SharpLog.Desktop.PortablilityScaffolds
+namespace SharpLog.PortabilityScaffolds
 {
-    using SharpLog.PortablilityScaffolds;
+    using SimpleInjector;
 
-    internal class ConcurrentDictionaryFacade<TKey, TValue> : ConcurrentDictionary<TKey, TValue>
+    public interface IPlatformBootstrap
     {
-        public ConcurrentDictionaryFacade()
+        void RegisterPlatformServices(Container container);
+    }
+
+    // TODO: Use open generics instead of concrete generic parameters after SimpleInjector issue #20948 is fixed.
+    public class DefaultBootstrap : IPlatformBootstrap
+    {
+        public void RegisterPlatformServices(Container container)
         {
+            container.Register(
+                typeof(IConcurrentDictionary<string, ILogger>),
+                typeof(ConcurrentDictionaryFacade<string, ILogger>));
         }
     }
 }

@@ -26,7 +26,7 @@ namespace SharpLog
     using System.Threading;
     using System.Threading.Tasks;
 
-    using SharpLog.PortablilityScaffolds;
+    using SharpLog.PortabilityScaffolds;
 
     public static class LogManager
     {
@@ -36,7 +36,7 @@ namespace SharpLog
 
         static LogManager()
         {
-            Loggers = Global.Services.GetInstance<IConcurrentDictionary<string, ILogger>>();
+            Loggers = Global.Container.GetInstance<IConcurrentDictionary<string, ILogger>>();
         }
 
         public static ILogger Logger
@@ -225,9 +225,9 @@ namespace SharpLog
             Logger = NullLogger;
         }
 
-        public static T CreateLogger<T>() where T : ILogger
+        public static T CreateLogger<T>() where T : ILogger, new()
         {
-            var logger = (T)Activator.CreateInstance(typeof(T));
+            var logger = new T();
             AttachLogger(logger);
             return logger;
         }

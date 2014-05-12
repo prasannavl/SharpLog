@@ -1,5 +1,5 @@
 ﻿// Author: Prasanna V. Loganathar
-// Project: SharpLog
+// Project: SharpLog.Desktop
 // 
 // Copyright 2014 Launchark. All Rights Reserved.
 // 
@@ -15,11 +15,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //  
-// Created: 12:04 AM 12-05-2014
+// Created: 5:35 PM 11-05-2014
 
-namespace SharpLog.PortablilityScaffolds
+namespace SharpLog.Desktop.PortabilityScaffolds
 {
-    internal class ConcurrentDictionaryFacade<TKey, TValue> : ConcurrentDictionary<TKey, TValue>
+    using SharpLog.PortabilityScaffolds;
+
+    public sealed class ConcurrentDictionaryFacade<TKey, TValue> :
+        System.Collections.Concurrent.ConcurrentDictionary<TKey, TValue>,
+        IConcurrentDictionary<TKey, TValue>
     {
         public ConcurrentDictionaryFacade()
         {

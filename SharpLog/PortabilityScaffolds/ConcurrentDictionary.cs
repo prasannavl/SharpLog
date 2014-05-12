@@ -17,7 +17,7 @@
 //  
 // Created: 5:36 PM 08-05-2014
 
-namespace SharpLog.PortablilityScaffolds
+namespace SharpLog.PortabilityScaffolds
 {
     using System;
     using System.Collections;
@@ -607,7 +607,7 @@ namespace SharpLog.PortablilityScaffolds
                                                       IDictionary,
                                                       ICollection,
                                                       IEnumerable,
-                                                      IConcurrentDictionary<TKey, TValue>
+                                                      IDictionary<TKey, TValue>
     {
         private IEqualityComparer<TKey> comparer;
 
@@ -658,6 +658,14 @@ namespace SharpLog.PortablilityScaffolds
         public ConcurrentDictionary(int concurrencyLevel, int capacity, IEqualityComparer<TKey> comparer)
             : this(comparer)
         {
+        }
+
+        public bool IsEmpty
+        {
+            get
+            {
+                return Count == 0;
+            }
         }
 
         void ICollection<KeyValuePair<TKey, TValue>>.Add(KeyValuePair<TKey, TValue> pair)
@@ -712,11 +720,119 @@ namespace SharpLog.PortablilityScaffolds
             return (IEnumerator)GetEnumeratorInternal();
         }
 
-        public bool IsEmpty
+        bool IDictionary.Contains(object key)
+        {
+            if (!(key is TKey))
+            {
+                return false;
+            }
+
+            return ContainsKey((TKey)key);
+        }
+
+        void IDictionary.Remove(object key)
+        {
+            if (!(key is TKey))
+            {
+                return;
+            }
+
+            Remove((TKey)key);
+        }
+
+        object IDictionary.this[object key]
         {
             get
             {
-                return Count == 0;
+                TValue obj;
+                if (key is TKey && TryGetValue((TKey)key, out obj))
+                {
+                    return obj;
+                }
+                return null;
+            }
+            set
+            {
+                if (!(key is TKey) || !(value is TValue))
+                {
+                    throw new ArgumentException("key or value aren't of correct type");
+                }
+
+                this[(TKey)key] = (TValue)value;
+            }
+        }
+
+        void IDictionary.Add(object key, object value)
+        {
+            if (!(key is TKey) || !(value is TValue))
+            {
+                throw new ArgumentException("key or value aren't of correct type");
+            }
+
+            Add((TKey)key, (TValue)value);
+        }
+
+        bool IDictionary.IsReadOnly
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        ICollection IDictionary.Keys
+        {
+            get
+            {
+                return (ICollection)Keys;
+            }
+        }
+
+        ICollection IDictionary.Values
+        {
+            get
+            {
+                return (ICollection)Values;
+            }
+        }
+
+        void ICollection.CopyTo(Array array, int startIndex)
+        {
+            var arr = array as KeyValuePair<TKey, TValue>[];
+            if (arr == null)
+            {
+                return;
+            }
+
+            CopyTo(arr, startIndex, Count);
+        }
+
+        IDictionaryEnumerator IDictionary.GetEnumerator()
+        {
+            return new ConcurrentDictionaryEnumerator(GetEnumeratorInternal());
+        }
+
+        object ICollection.SyncRoot
+        {
+            get
+            {
+                return this;
+            }
+        }
+
+        bool IDictionary.IsFixedSize
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        bool ICollection.IsSynchronized
+        {
+            get
+            {
+                return true;
             }
         }
 
@@ -850,122 +966,6 @@ namespace SharpLog.PortablilityScaffolds
             // not a lot of possibilities
 
             return new List<KeyValuePair<TKey, TValue>>(this).ToArray();
-        }
-
-        bool IDictionary.Contains(object key)
-        {
-            if (!(key is TKey))
-            {
-                return false;
-            }
-
-            return ContainsKey((TKey)key);
-        }
-
-        void IDictionary.Remove(object key)
-        {
-            if (!(key is TKey))
-            {
-                return;
-            }
-
-            Remove((TKey)key);
-        }
-
-        object IDictionary.this[object key]
-        {
-            get
-            {
-                TValue obj;
-                if (key is TKey && TryGetValue((TKey)key, out obj))
-                {
-                    return obj;
-                }
-                return null;
-            }
-            set
-            {
-                if (!(key is TKey) || !(value is TValue))
-                {
-                    throw new ArgumentException("key or value aren't of correct type");
-                }
-
-                this[(TKey)key] = (TValue)value;
-            }
-        }
-
-        void IDictionary.Add(object key, object value)
-        {
-            if (!(key is TKey) || !(value is TValue))
-            {
-                throw new ArgumentException("key or value aren't of correct type");
-            }
-
-            Add((TKey)key, (TValue)value);
-        }
-
-        bool IDictionary.IsReadOnly
-        {
-            get
-            {
-                return false;
-            }
-        }
-
-        ICollection IDictionary.Keys
-        {
-            get
-            {
-                return (ICollection)Keys;
-            }
-        }
-
-        ICollection IDictionary.Values
-        {
-            get
-            {
-                return (ICollection)Values;
-            }
-        }
-
-        void ICollection.CopyTo(Array array, int startIndex)
-        {
-            var arr = array as KeyValuePair<TKey, TValue>[];
-            if (arr == null)
-            {
-                return;
-            }
-
-            CopyTo(arr, startIndex, Count);
-        }
-
-        IDictionaryEnumerator IDictionary.GetEnumerator()
-        {
-            return new ConcurrentDictionaryEnumerator(GetEnumeratorInternal());
-        }
-
-        object ICollection.SyncRoot
-        {
-            get
-            {
-                return this;
-            }
-        }
-
-        bool IDictionary.IsFixedSize
-        {
-            get
-            {
-                return false;
-            }
-        }
-
-        bool ICollection.IsSynchronized
-        {
-            get
-            {
-                return true;
-            }
         }
 
         private void CheckKey(TKey key)

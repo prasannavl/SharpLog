@@ -25,7 +25,7 @@ namespace SharpLog
     using System.Runtime.CompilerServices;
     using System.Threading.Tasks;
 
-    using SharpLog.PortablilityScaffolds;
+    using SharpLog.PortabilityScaffolds;
 
     public interface ICompositeLogger : ILogger
     {
@@ -41,7 +41,7 @@ namespace SharpLog
     {
         public CompositeLogger()
         {
-            Targets = Global.Services.GetInstance<IConcurrentDictionary<string, ILogger>>();
+            Targets = Global.Container.GetInstance<IConcurrentDictionary<string, ILogger>>();
             IsEnabled = true;
         }
 
