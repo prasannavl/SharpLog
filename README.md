@@ -19,11 +19,11 @@ It follows simple convention over configuration, and works with PCL.
 Why
 ---
    
-Loggers like NLog are great! In fact, if you're already happy with it, stay with it. But they don't work with PCL (as of writing this section), and they bring a lot of complexity to logging. 
+Loggers like NLog, log4Net are great! In fact, if you're already happy with it, stay with it. But they don't work with PCL (as of writing this section), and they bring a lot of complexity to logging. 
 
 SharpLog focuses on being extremely simple, while providing everything that a framework like NLog provides. So, you don't really have to spend time learning the framework. Just get straight on to work, and makes it very easy to find out if something does wrong. 
 
-Also, SharpLog focuses only on high-performance components. For example, the LogManager does not have a GetCurrentClassLogger like NLog. Since it uses a lot of reflection underneath, this practice is not recommended. As an alternative, create your own key-based logger with the name. 
+Also, SharpLog focuses only on high-performance components. For example, the LogManager does not have a GetCurrentClassLogger like NLog. Since it uses a lot of reflection underneath, a better approach of either having your own key-based logger with the name, or using a DI like SimpleInjector to automatically inject based on the context is recommended.
 
 If you find something lacking, just use one of the abstract classes as starting point, or go directly to the core and implement your own ILogger. 
 
@@ -38,7 +38,7 @@ Example
 // Automatically attached to Log Manager, and also sets it as the default logger to be used
 // from LogManager.Log
 
-var l = LogManager.CreateLogger<ConsoleLogger>();
+var l = LogManager.CreateLogger<ColoredConsoleLogger>();
 
 // Default level is Trace, on Debug builds, and Warn+Trace on Release.
 LogManager.Logger.Level = LogLevel.Trace;

@@ -23,83 +23,38 @@ namespace SharpLog.Desktop
 
     public class ConsoleLogger : SynchronousFormattableLogger
     {
-        private ConsoleColor previousColorState;
-        private ConsoleColor criticalColor = ConsoleColor.Red;
-        private ConsoleColor errorColor = ConsoleColor.Yellow;
-        private ConsoleColor warnColor = ConsoleColor.Cyan;
-        private ConsoleColor infoColor = ConsoleColor.Gray;
-        private ConsoleColor debugColor = ConsoleColor.DarkGray;
-        private ConsoleColor traceColor = ConsoleColor.White;
+        private bool isSynchronized;
 
-        public ConsoleColor ErrorColor
+        private Action<string> executeAction;
+
+        public ConsoleLogger()
+        {
+            SetSynchronizationMode(false);
+        }
+
+        public ConsoleLogger(bool isSynchronized)
+        {
+            SetSynchronizationMode(isSynchronized);
+        }
+
+        public override bool IsSynchronized
         {
             get
             {
-                return errorColor;
-            }
-            set
-            {
-                errorColor = value;
+                return isSynchronized;
             }
         }
 
-        public ConsoleColor CriticalColor
+        public void SetSynchronizationMode(bool isSynchronized)
         {
-            get
+            this.isSynchronized = isSynchronized;
+            if (isSynchronized)
             {
-                return criticalColor;
+                executeAction = WriteToConsoleSynchronized;
             }
-            set
+            else
             {
-                criticalColor = value;
-            }
-        }
-
-        public ConsoleColor WarnColor
-        {
-            get
-            {
-                return warnColor;
-            }
-            set
-            {
-                warnColor = value;
-            }
-        }
-
-        public ConsoleColor InfoColor
-        {
-            get
-            {
-                return infoColor;
-            }
-            set
-            {
-                infoColor = value;
-            }
-        }
-
-        public ConsoleColor DebugColor
-        {
-            get
-            {
-                return debugColor;
-            }
-            set
-            {
-                debugColor = value;
-            }
-        }
-
-        public ConsoleColor TraceColor
-        {
-            get
-            {
-                return traceColor;
-            }
-            set
-            {
-                traceColor = value;
+                executeAction = WriteToConsole;
             }
         }
 
@@ -107,44 +62,27 @@ namespace SharpLog.Desktop
         {
         }
 
-        public void SetGlobalTextColor(ConsoleColor color)
-        {
-            ErrorColor = CriticalColor = TraceColor = WarnColor = InfoColor = DebugColor = color;
-        }
-
         public override string Format(string text, LogLevel level, string callerName)
         {
             return string.Format("{0}: {1} -> {2}", level.ToString().ToUpperInvariant(), callerName, text);
         }
 
-        protected override void Execute(LogLevel level, string text, string callerName)
+        protected void WriteToConsole(string text)
+        {
+            Console.WriteLine(text);
+        }
+
+        protected void WriteToConsoleSynchronized(string text)
         {
             lock (Console.Out)
             {
-                previousColorState = Console.ForegroundColor;
-                Console.ForegroundColor = GetColor(level);
-                Console.WriteLine(text);
-                Console.ForegroundColor = previousColorState;
+                WriteToConsole(text);
             }
         }
 
-        private ConsoleColor GetColor(LogLevel level)
+        protected override void Execute(LogLevel level, string text, string callerName)
         {
-            switch (level)
-            {
-                case LogLevel.Error:
-                    return ErrorColor;
-                case LogLevel.Critical:
-                    return CriticalColor;
-                case LogLevel.Debug:
-                    return DebugColor;
-                case LogLevel.Trace:
-                    return TraceColor;
-                case LogLevel.Warn:
-                    return WarnColor;
-                default:
-                    return InfoColor;
-            }
+            executeAction(text);
         }
     }
 }

@@ -19,8 +19,6 @@
 
 namespace SharpLog.Sample.Console
 {
-    using System.Reflection;
-
     using SharpLog.Desktop;
 
     internal class Program
@@ -30,7 +28,7 @@ namespace SharpLog.Sample.Console
             // Automatically attached to Log Manager, and also sets it as the default logger to be used
             // from LogManager.Log
 
-            var l = LogManager.CreateLogger<ConsoleLogger>();
+            var l = LogManager.CreateLogger<ColoredConsoleLogger>();
 
             // Default level is Trace, on Debug builds, and Warn+Trace on Release.
             LogManager.Logger.Level = LogLevel.Trace;

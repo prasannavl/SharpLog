@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsoleLogger.cs" />
+    <Compile Include="ColoredConsoleLogger.cs" />
     <Compile Include="PortabilityScaffolds\PlatformBootstrap.cs" />
     <Compile Include="PortabilityScaffolds\ConcurrentDictionaryFacade.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
