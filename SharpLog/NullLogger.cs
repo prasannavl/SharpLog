@@ -19,6 +19,7 @@
 
 namespace SharpLog
 {
+    using System;
     using System.Threading.Tasks;
 
     public class NullLogger : ILogger
@@ -86,7 +87,15 @@ namespace SharpLog
         {
         }
 
+        public void Debug(Func<string> textFunc, string callerName = null)
+        {
+        }
+
         public void Trace(string text, string callerName = null)
+        {
+        }
+
+        public void Trace(Func<string> textFunc, string callerName = null)
         {
         }
 
@@ -115,7 +124,17 @@ namespace SharpLog
             return Helpers.CompletedTask;
         }
 
+        public Task DebugAsync(Func<string> textFunc, string callerName = null)
+        {
+            return Helpers.CompletedTask;
+        }
+
         public Task TraceAsync(string text, string callerName = null)
+        {
+            return Helpers.CompletedTask;
+        }
+
+        public Task TraceAsync(Func<string> textFunc, string callerName = null)
         {
             return Helpers.CompletedTask;
         }

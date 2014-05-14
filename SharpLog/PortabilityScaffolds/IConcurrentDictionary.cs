@@ -26,9 +26,7 @@ namespace SharpLog.PortabilityScaffolds
     {
         bool IsEmpty { get; }
         bool TryAdd(TKey key, TValue value);
-
         TValue AddOrUpdate(TKey key, Func<TKey, TValue> addValueFactory, Func<TKey, TValue, TValue> updateValueFactory);
-
         TValue AddOrUpdate(TKey key, TValue addValue, Func<TKey, TValue, TValue> updateValueFactory);
         bool TryUpdate(TKey key, TValue newValue, TValue comparisonValue);
         TValue GetOrAdd(TKey key, Func<TKey, TValue> valueFactory);

@@ -70,11 +70,27 @@ namespace SharpLog
             }
         }
 
+        public override void Debug(Func<string> textFunc, string callerName = null)
+        {
+            if (LogLevelState > LogLevelState.EnabledDebugLowerThreshold)
+            {
+                Execute(LogLevel.Debug, textFunc(), callerName);
+            }
+        }
+
         public override void Trace(string text, [CallerMemberName] string callerName = null)
         {
             if (LogLevelState.HasFlag(LogLevelState.Trace))
             {
                 Execute(LogLevel.Trace, text, callerName);
+            }
+        }
+
+        public override void Trace(Func<string> textFunc, string callerName = null)
+        {
+            if (LogLevelState.HasFlag(LogLevelState.Trace))
+            {
+                Execute(LogLevel.Trace, textFunc(), callerName);
             }
         }
 
@@ -123,11 +139,29 @@ namespace SharpLog
             return Helpers.CompletedTask;
         }
 
+        public override Task DebugAsync(Func<string> textFunc, string callerName = null)
+        {
+            if (LogLevelState > LogLevelState.EnabledDebugLowerThreshold)
+            {
+                return ExecuteAsync(LogLevel.Debug, textFunc(), callerName);
+            }
+            return Helpers.CompletedTask;
+        }
+
         public override Task TraceAsync(string text, [CallerMemberName] string callerName = null)
         {
             if (LogLevelState.HasFlag(LogLevelState.Trace))
             {
                 return ExecuteAsync(LogLevel.Trace, text, callerName);
+            }
+            return Helpers.CompletedTask;
+        }
+
+        public override Task TraceAsync(Func<string> textFunc, string callerName = null)
+        {
+            if (LogLevelState.HasFlag(LogLevelState.Trace))
+            {
+                return ExecuteAsync(LogLevel.Trace, textFunc(), callerName);
             }
             return Helpers.CompletedTask;
         }

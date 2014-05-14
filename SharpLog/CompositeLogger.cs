@@ -158,10 +158,34 @@ namespace SharpLog
             }
         }
 
+        public override void Debug(Func<string> textFunc, string callerName = null)
+        {
+            if (LogLevelState > LogLevelState.EnabledDebugLowerThreshold)
+            {
+                var text = textFunc();
+                foreach (var target in Targets)
+                {
+                    target.Value.Debug(text, callerName);
+                }
+            }
+        }
+
         public override void Trace(string text, [CallerMemberName] string callerName = null)
         {
             if (LogLevelState.HasFlag(LogLevelState.Trace))
             {
+                foreach (var target in Targets)
+                {
+                    target.Value.Trace(text, callerName);
+                }
+            }
+        }
+
+        public override void Trace(Func<string> textFunc, string callerName = null)
+        {
+            if (LogLevelState.HasFlag(LogLevelState.Trace))
+            {
+                var text = textFunc();
                 foreach (var target in Targets)
                 {
                     target.Value.Trace(text, callerName);
@@ -209,10 +233,28 @@ namespace SharpLog
             }
         }
 
+        public override async Task DebugAsync(Func<string> textFunc, string callerName = null)
+        {
+            if (LogLevelState > LogLevelState.EnabledDebugLowerThreshold)
+            {
+                var text = textFunc();
+                await Task.WhenAll(Targets.Select(x => x.Value.DebugAsync(text, callerName)));
+            }
+        }
+
         public override async Task TraceAsync(string text, [CallerMemberName] string callerName = null)
         {
             if (LogLevelState.HasFlag(LogLevelState.Trace))
             {
+                await Task.WhenAll(Targets.Select(x => x.Value.TraceAsync(text, callerName)));
+            }
+        }
+
+        public override async Task TraceAsync(Func<string> textFunc, string callerName = null)
+        {
+            if (LogLevelState.HasFlag(LogLevelState.Trace))
+            {
+                var text = textFunc();
                 await Task.WhenAll(Targets.Select(x => x.Value.TraceAsync(text, callerName)));
             }
         }
