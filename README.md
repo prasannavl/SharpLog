@@ -31,6 +31,18 @@ And feel free to contribute tid-bits. :)
 
 I'll keep adding more loggers as I need them, including Bufferred, File-based, memory-based, network-based loggers.
 
+The Cooler Bits
+---
+
+- All loggers have **asynchrony right into its roots**. -> Logger.InfoAsync, Logger.ErrorAsync, etc.
+
+- Debug, and Trace functions are slightly special. They have an extra overload, that even **takes Funcs to offer deffered execution**. :) .. Oh, if you want to write your own logger, you won't have to do a thing. Its all already wired up for you. 
+
+    LogManager.Logger.Debug((ex) => ex.StackTrace, exception);
+
+- When I say **high-performance, I'm very serious about it**. There are **no multi-level nested checking for log levels, and if they are enabled**. There is just one check that happens. And as you, see above, there's no other logger that I know of, offers deffered execution using Funcs for Debug, and Trace. So, you never incur a performance hit of unwinding through your stackTrace, even if you have logging and or Trace disabled.
+
+
 Example
 ---
 
@@ -89,6 +101,44 @@ cl.Info("COMPOSITE: Info");
 oldConsoleLogger.Info("Bye bye!");
 
 ```
+
+
+The API
+---
+
+```C#
+
+ 	public interface ILogger : IDisposable
+    {
+        bool IsEnabled { get; set; }
+        bool IsTracingEnabled { get; set; }
+        bool IsSynchronized { get; }
+        LogLevel Level { get; set; }
+
+        void Critical(string text, [CallerMemberName] string callerName = null);
+        void Error(string text, [CallerMemberName] string callerName = null);
+        void Warn(string text, [CallerMemberName] string callerName = null);
+        void Info(string text, [CallerMemberName] string callerName = null);
+        void Debug(string text, [CallerMemberName] string callerName = null);
+        void Debug(Func<object, string> textFunc, object state = null, [CallerMemberName] string callerName = null);
+        void Trace(string text, [CallerMemberName] string callerName = null);
+        void Trace(Func<object, string> textFunc, object state = null, [CallerMemberName] string callerName = null);
+
+        Task CriticalAsync(string text, [CallerMemberName] string callerName = null);
+        Task ErrorAsync(string text, [CallerMemberName] string callerName = null);
+        Task WarnAsync(string text, [CallerMemberName] string callerName = null);
+        Task InfoAsync(string text, [CallerMemberName] string callerName = null);
+        Task DebugAsync(string text, [CallerMemberName] string callerName = null);
+        Task DebugAsync(Func<object, string> textFunc, object state = null, [CallerMemberName] string callerName = null);
+        Task TraceAsync(string text, [CallerMemberName] string callerName = null);
+        Task TraceAsync(Func<object, string> textFunc, object state = null, [CallerMemberName] string callerName = null);
+
+    }
+```
+
+Developers, fret not, you'd almost never have to implement the whole thing yourself. 
+
+There're abstract classes for that. **90% of the time, you'd just end up implement one Execute method, and an optional ExecuteAsync method**. Everything else is already wired-up for you and ready to go.
 
 ---
 

@@ -70,11 +70,11 @@ namespace SharpLog
             }
         }
 
-        public override void Debug(Func<string> textFunc, string callerName = null)
+        public override void Debug(Func<object, string> textFunc, object state = null, string callerName = null)
         {
             if (LogLevelState > LogLevelState.EnabledDebugLowerThreshold)
             {
-                Execute(LogLevel.Debug, textFunc(), callerName);
+                Execute(LogLevel.Debug, textFunc(state), callerName);
             }
         }
 
@@ -86,11 +86,11 @@ namespace SharpLog
             }
         }
 
-        public override void Trace(Func<string> textFunc, string callerName = null)
+        public override void Trace(Func<object, string> textFunc, object state = null, string callerName = null)
         {
             if (LogLevelState.HasFlag(LogLevelState.Trace))
             {
-                Execute(LogLevel.Trace, textFunc(), callerName);
+                Execute(LogLevel.Trace, textFunc(state), callerName);
             }
         }
 
@@ -139,11 +139,11 @@ namespace SharpLog
             return Helpers.CompletedTask;
         }
 
-        public override Task DebugAsync(Func<string> textFunc, string callerName = null)
+        public override Task DebugAsync(Func<object, string> textFunc, object state = null, string callerName = null)
         {
             if (LogLevelState > LogLevelState.EnabledDebugLowerThreshold)
             {
-                return ExecuteAsync(LogLevel.Debug, textFunc(), callerName);
+                return ExecuteAsync(LogLevel.Debug, textFunc(state), callerName);
             }
             return Helpers.CompletedTask;
         }
@@ -157,11 +157,11 @@ namespace SharpLog
             return Helpers.CompletedTask;
         }
 
-        public override Task TraceAsync(Func<string> textFunc, string callerName = null)
+        public override Task TraceAsync(Func<object, string> textFunc, object state = null, string callerName = null)
         {
             if (LogLevelState.HasFlag(LogLevelState.Trace))
             {
-                return ExecuteAsync(LogLevel.Trace, textFunc(), callerName);
+                return ExecuteAsync(LogLevel.Trace, textFunc(state), callerName);
             }
             return Helpers.CompletedTask;
         }

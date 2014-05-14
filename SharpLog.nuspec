@@ -2,14 +2,14 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>SharpLog</id>
-        <version>1.2.0</version>
+        <version>1.2.5</version>
         <title>SharpLog</title>
         <authors>Launchark,Prasanna V. Loganathar</authors>
         <owners>Prasanna V. Loganathar</owners>
         <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0.txt</licenseUrl>
         <projectUrl>https://github.com/prasannavl/SharpLog</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <description>A simple high-peformance portable logging framework for .NET, which follows simple convention over configuration, and works with PCL.</description>
+        <description>A simple high-peformance portable logging framework for .NET, which follows simple convention over configuration, works with PCL.</description>
         <summary>A simple high-peformance portable logging framework for .NET</summary>
         <copyright>Copyright 2014</copyright>
         <tags>log logging pcl logger framework</tags>

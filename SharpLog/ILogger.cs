@@ -35,18 +35,18 @@ namespace SharpLog
         void Warn(string text, [CallerMemberName] string callerName = null);
         void Info(string text, [CallerMemberName] string callerName = null);
         void Debug(string text, [CallerMemberName] string callerName = null);
-        void Debug(Func<string> textFunc, [CallerMemberName] string callerName = null);
+        void Debug(Func<object, string> textFunc, object state = null, [CallerMemberName] string callerName = null);
         void Trace(string text, [CallerMemberName] string callerName = null);
-        void Trace(Func<string> textFunc, [CallerMemberName] string callerName = null);
+        void Trace(Func<object, string> textFunc, object state = null, [CallerMemberName] string callerName = null);
 
         Task CriticalAsync(string text, [CallerMemberName] string callerName = null);
         Task ErrorAsync(string text, [CallerMemberName] string callerName = null);
         Task WarnAsync(string text, [CallerMemberName] string callerName = null);
         Task InfoAsync(string text, [CallerMemberName] string callerName = null);
         Task DebugAsync(string text, [CallerMemberName] string callerName = null);
-        Task DebugAsync(Func<string> textFunc, [CallerMemberName] string callerName = null);
+        Task DebugAsync(Func<object, string> textFunc, object state = null, [CallerMemberName] string callerName = null);
         Task TraceAsync(string text, [CallerMemberName] string callerName = null);
-        Task TraceAsync(Func<string> textFunc, [CallerMemberName] string callerName = null);
+        Task TraceAsync(Func<object, string> textFunc, object state = null, [CallerMemberName] string callerName = null);
 
     }
 }

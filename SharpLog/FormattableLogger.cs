@@ -72,11 +72,11 @@ namespace SharpLog
             }
         }
 
-        public override void Debug(Func<string> textFunc, string callerName = null)
+        public override void Debug(Func<object, string> textFunc, object state = null, string callerName = null)
         {
             if (LogLevelState > LogLevelState.EnabledDebugLowerThreshold)
             {
-                var text = Format(textFunc(), LogLevel.Debug, callerName);
+                var text = Format(textFunc(state), LogLevel.Debug, callerName);
                 Execute(LogLevel.Debug, text, callerName);
             }
         }
@@ -90,11 +90,11 @@ namespace SharpLog
             }
         }
 
-        public override void Trace(Func<string> textFunc, string callerName = null)
+        public override void Trace(Func<object, string> textFunc, object state = null, string callerName = null)
         {
             if (LogLevelState.HasFlag(LogLevelState.Trace))
             {
-                var text = Format(textFunc(), LogLevel.Trace, callerName);
+                var text = Format(textFunc(state), LogLevel.Trace, callerName);
                 Execute(LogLevel.Trace, text, callerName);
             }
         }
@@ -141,11 +141,11 @@ namespace SharpLog
             return Helpers.CompletedTask;
         }
 
-        public override Task DebugAsync(Func<string> textFunc, string callerName = null)
+        public override Task DebugAsync(Func<object, string> textFunc, object state = null, string callerName = null)
         {
             if (LogLevelState > LogLevelState.EnabledDebugLowerThreshold)
             {
-                var text = Format(textFunc(), LogLevel.Debug, callerName);
+                var text = Format(textFunc(state), LogLevel.Debug, callerName);
                 return ExecuteAsync(LogLevel.Debug, text, callerName);
             }
             return Helpers.CompletedTask;
@@ -161,11 +161,11 @@ namespace SharpLog
             return Helpers.CompletedTask;
         }
 
-        public override Task TraceAsync(Func<string> textFunc, string callerName = null)
+        public override Task TraceAsync(Func<object, string> textFunc, object state = null, string callerName = null)
         {
             if (LogLevelState.HasFlag(LogLevelState.Trace))
             {
-                var text = Format(textFunc(), LogLevel.Trace, callerName);
+                var text = Format(textFunc(state), LogLevel.Trace, callerName);
                 return ExecuteAsync(LogLevel.Trace, text, callerName);
             }
             return Helpers.CompletedTask;

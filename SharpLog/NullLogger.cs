@@ -87,7 +87,7 @@ namespace SharpLog
         {
         }
 
-        public void Debug(Func<string> textFunc, string callerName = null)
+        public void Debug(Func<object, string> textFunc, object state = null, string callerName = null)
         {
         }
 
@@ -95,7 +95,7 @@ namespace SharpLog
         {
         }
 
-        public void Trace(Func<string> textFunc, string callerName = null)
+        public void Trace(Func<object, string> textFunc, object state = null, string callerName = null)
         {
         }
 
@@ -124,7 +124,7 @@ namespace SharpLog
             return Helpers.CompletedTask;
         }
 
-        public Task DebugAsync(Func<string> textFunc, string callerName = null)
+        public Task DebugAsync(Func<object, string> textFunc, object state = null, string callerName = null)
         {
             return Helpers.CompletedTask;
         }
@@ -134,7 +134,7 @@ namespace SharpLog
             return Helpers.CompletedTask;
         }
 
-        public Task TraceAsync(Func<string> textFunc, string callerName = null)
+        public Task TraceAsync(Func<object, string> textFunc, object state = null, string callerName = null)
         {
             return Helpers.CompletedTask;
         }
