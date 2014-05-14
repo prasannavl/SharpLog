@@ -120,29 +120,36 @@ The API
         void Warn(string text, [CallerMemberName] string callerName = null);
         void Info(string text, [CallerMemberName] string callerName = null);
         void Debug(string text, [CallerMemberName] string callerName = null);
-        void Debug(Func<object, string> textFunc, object state = null, [CallerMemberName] string callerName = null);
+        void Debug(Func<object, string> textFunc, 
+					object state = null, 
+					[CallerMemberName] string callerName = null);
         void Trace(string text, [CallerMemberName] string callerName = null);
-        void Trace(Func<object, string> textFunc, object state = null, [CallerMemberName] string callerName = null);
+        void Trace(Func<object, string> textFunc, 
+					object state = null, 
+					[CallerMemberName] string callerName = null);
 
         Task CriticalAsync(string text, [CallerMemberName] string callerName = null);
         Task ErrorAsync(string text, [CallerMemberName] string callerName = null);
         Task WarnAsync(string text, [CallerMemberName] string callerName = null);
         Task InfoAsync(string text, [CallerMemberName] string callerName = null);
         Task DebugAsync(string text, [CallerMemberName] string callerName = null);
-        Task DebugAsync(Func<object, string> textFunc, object state = null, [CallerMemberName] string callerName = null);
+        Task DebugAsync(Func<object, string> textFunc, 
+						 object state = null, 
+						 [CallerMemberName] string callerName = null);
         Task TraceAsync(string text, [CallerMemberName] string callerName = null);
-        Task TraceAsync(Func<object, string> textFunc, object state = null, [CallerMemberName] string callerName = null);
+        Task TraceAsync(Func<object, string> textFunc, 
+						 object state = null, 
+						 [CallerMemberName] string callerName = null);
 
     }
 ```
 
-Developers, fret not, you'd almost never have to implement the whole thing yourself. 
+Logger writers, fret not, you'd almost never have to implement the whole thing yourself. 
 
 There're abstract classes for that. **90% of the time, you'd just end up implement one Execute method, and an optional ExecuteAsync method**. Everything else is already wired-up for you and ready to go.
 
+Fun and useful ideas:
 ---
-
-### Fun and useful ideas:
 
 - XAML-based overlay logger (So, it works on all platforms)
 - Network logger and a receiver GUI over network.
