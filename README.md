@@ -146,7 +146,7 @@ The API
 
 Logger writers, fret not, you'd almost never have to implement the whole thing yourself. 
 
-There're abstract classes for that. **90% of the time, you'd just end up implement one Execute method, and an optional ExecuteAsync method**. Everything else is already wired-up for you and ready to go.
+There're abstract classes for that. **90% of the time, you'd just end up implementing an Execute method, and an optional ExecuteAsync method**. Everything else is already wired-up for you and ready to go.
 
 Fun and useful ideas:
 ---
