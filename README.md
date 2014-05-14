@@ -36,9 +36,9 @@ The Cooler Bits
 
 - All loggers have **asynchrony right into its roots**. -> Logger.InfoAsync, Logger.ErrorAsync, etc.
 
-- Debug, and Trace functions are slightly special. They have an extra overload, that even **takes Funcs to offer deffered execution**. :) .. Oh, if you want to write your own logger, you won't have to do a thing. Its all already wired up for you. 
+- Debug, and Trace functions are slightly special. They have an extra overload, that even **takes Funcs to offer deffered execution**. It gets executed only if, the logging of that level is active :) .. Oh, if you want to write your own logger, you won't have to do a thing. Its all already wired up for you. 
 
-    LogManager.Logger.Debug((ex) => ex.StackTrace, exception);
+    	LogManager.Logger.Debug((ex) => ex.StackTrace, exception);
 
 - When I say **high-performance, I'm very serious about it**. There are **no multi-level nested checking for log levels, and if they are enabled**. There is just one check that happens. And as you, see above, there's no other logger that I know of, offers deffered execution using Funcs for Debug, and Trace. So, you never incur a performance hit of unwinding through your stackTrace, even if you have logging and or Trace disabled.
 
