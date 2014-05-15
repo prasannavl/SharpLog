@@ -19,8 +19,22 @@
 
 namespace SharpLog
 {
+    using System;
+    using System.Diagnostics;
+    using System.Linq.Expressions;
+    using System.Reflection;
+
     public class DebugLogger : SynchronousFormattableLogger
     {
+        private readonly Action<string> compiledAction;
+
+        public DebugLogger()
+        {
+            var p = Expression.Parameter(typeof(string), "text");
+            var callExp = Expression.Call(typeof(Debug).GetRuntimeMethod("WriteLine", new[] { typeof(string) }), p);
+            compiledAction = Expression.Lambda<Action<string>>(callExp, p).Compile();
+        }
+
         public override string Format(string text, LogLevel level, string callerName)
         {
             return string.Format("{0}: {1} -> {2}", level.ToString().ToUpperInvariant(), callerName, text);
@@ -28,7 +42,7 @@ namespace SharpLog
 
         protected override void Execute(LogLevel level, string text, string callerName)
         {
-            System.Diagnostics.Debug.WriteLine(text);
+            compiledAction(text);
         }
 
         protected override void Dispose(bool disposing)
