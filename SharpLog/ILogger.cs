@@ -15,14 +15,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //  
-// Created: 7:06 PM 07-05-2014
+// Created: 3:05 AM 21-05-2014
+
+using System;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
 namespace SharpLog
 {
-    using System;
-    using System.Runtime.CompilerServices;
-    using System.Threading.Tasks;
-
     public interface ILogger : IDisposable
     {
         bool IsEnabled { get; set; }
@@ -35,18 +35,18 @@ namespace SharpLog
         void Warn(string text, [CallerMemberName] string callerName = null);
         void Info(string text, [CallerMemberName] string callerName = null);
         void Debug(string text, [CallerMemberName] string callerName = null);
-        void Debug(Func<object, string> textFunc, object state = null, [CallerMemberName] string callerName = null);
+        void Debug<T>(Func<T, string> textFunc, T state, [CallerMemberName] string callerName = null);
+
         void Trace(string text, [CallerMemberName] string callerName = null);
-        void Trace(Func<object, string> textFunc, object state = null, [CallerMemberName] string callerName = null);
+        void Trace<T>(Func<T, string> textFunc, T state, [CallerMemberName] string callerName = null);
 
         Task CriticalAsync(string text, [CallerMemberName] string callerName = null);
         Task ErrorAsync(string text, [CallerMemberName] string callerName = null);
         Task WarnAsync(string text, [CallerMemberName] string callerName = null);
         Task InfoAsync(string text, [CallerMemberName] string callerName = null);
         Task DebugAsync(string text, [CallerMemberName] string callerName = null);
-        Task DebugAsync(Func<object, string> textFunc, object state = null, [CallerMemberName] string callerName = null);
+        Task DebugAsync<T>(Func<T, string> textFunc, T state, [CallerMemberName] string callerName = null);
         Task TraceAsync(string text, [CallerMemberName] string callerName = null);
-        Task TraceAsync(Func<object, string> textFunc, object state = null, [CallerMemberName] string callerName = null);
-
+        Task TraceAsync<T>(Func<T, string> textFunc, T state, [CallerMemberName] string callerName = null);
     }
 }

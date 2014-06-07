@@ -20,6 +20,7 @@
 namespace SharpLog
 {
     using System;
+    using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
     using System.Threading;
@@ -52,32 +53,49 @@ namespace SharpLog
 
         private static Container ConstructPlatformContainer()
         {
+            Debug.WriteLine("Constructing container.");
             var platformContainer = new Container();
             platformContainer.Options.AllowOverridingRegistrations = true;
 
             var platformBootstrapperTypeInfoCache = typeof(IPlatformBootstrap).GetTypeInfo();
 
+            Debug.WriteLine("Using default bootstrap.");
+
             var defaultBootStrapper = new DefaultBootstrap();
             defaultBootStrapper.RegisterPlatformServices(platformContainer);
 
+            Debug.WriteLine("Platform bootstrap.");
+
             foreach (var assemblyName in PlatformSupportAssemblyNames)
             {
-                var assembly = Assembly.Load(new AssemblyName(assemblyName));
-                if (assembly != null)
+                try
                 {
-                    var bootstrapper =
-                        (IPlatformBootstrap)
-                        assembly.DefinedTypes.Where(platformBootstrapperTypeInfoCache.IsAssignableFrom)
-                            .Select(x => Activator.CreateInstance(x.AsType()))
-                            .FirstOrDefault();
-                    if (bootstrapper != null)
+                    var assembly = Assembly.Load(new AssemblyName(assemblyName));
+                    if (assembly != null)
                     {
-                        bootstrapper.RegisterPlatformServices(platformContainer);
+                        var bootstrapper =
+                            (IPlatformBootstrap)
+                            assembly.DefinedTypes.Where(platformBootstrapperTypeInfoCache.IsAssignableFrom)
+                                .Select(x => Activator.CreateInstance(x.AsType()))
+                                .FirstOrDefault();
+                        if (bootstrapper != null)
+                        {
+                            bootstrapper.RegisterPlatformServices(platformContainer);
+                        }
                     }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
                 }
             }
 
+            Debug.WriteLine("Platform bootstrap successful.");
+            Debug.WriteLine("Container verification.");
+
             platformContainer.Verify();
+            Debug.WriteLine("Container registration successful.");
+
             return platformContainer;
         }
     }

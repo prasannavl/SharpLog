@@ -15,56 +15,38 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //  
-// Created: 2:47 AM 11-05-2014
+// Created: 3:05 AM 21-05-2014
+
+using System;
+using System.Threading.Tasks;
 
 namespace SharpLog
 {
-    using System;
-    using System.Threading.Tasks;
-
     public class NullLogger : ILogger
     {
         public bool IsEnabled
         {
-            get
-            {
-                return true;
-            }
-            set
-            {
-            }
+            get { return true; }
+            set { }
         }
 
         public bool IsTracingEnabled
         {
-            get
-            {
-                return true;
-            }
+            get { return true; }
 
-            set
-            {
-            }
+            set { }
         }
 
         public bool IsSynchronized
         {
-            get
-            {
-                return true;
-            }
+            get { return true; }
         }
 
         public LogLevel Level
         {
-            get
-            {
-                return LogLevel.None;
-            }
+            get { return LogLevel.None; }
 
-            set
-            {
-            }
+            set { }
         }
 
         public void Critical(string text, string callerName = null)
@@ -87,7 +69,7 @@ namespace SharpLog
         {
         }
 
-        public void Debug(Func<object, string> textFunc, object state = null, string callerName = null)
+        public void Debug<T>(Func<T, string> textFunc, T state, string callerName = null)
         {
         }
 
@@ -95,7 +77,7 @@ namespace SharpLog
         {
         }
 
-        public void Trace(Func<object, string> textFunc, object state = null, string callerName = null)
+        public void Trace<T>(Func<T, string> textFunc, T state, string callerName = null)
         {
         }
 
@@ -124,7 +106,7 @@ namespace SharpLog
             return Helpers.CompletedTask;
         }
 
-        public Task DebugAsync(Func<object, string> textFunc, object state = null, string callerName = null)
+        public Task DebugAsync<T>(Func<T, string> textFunc, T state, string callerName = null)
         {
             return Helpers.CompletedTask;
         }
@@ -134,7 +116,7 @@ namespace SharpLog
             return Helpers.CompletedTask;
         }
 
-        public Task TraceAsync(Func<object, string> textFunc, object state = null, string callerName = null)
+        public Task TraceAsync<T>(Func<T, string> textFunc, T state, string callerName = null)
         {
             return Helpers.CompletedTask;
         }

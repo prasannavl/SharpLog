@@ -17,6 +17,8 @@
 //  
 // Created: 12:24 AM 12-05-2014
 
+using System;
+
 namespace SharpLog.Sample.Console
 {
     using SharpLog.Desktop;

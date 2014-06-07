@@ -15,19 +15,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //  
-// Created: 2:43 AM 11-05-2014
+// Created: 3:05 AM 21-05-2014
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
+using SharpLog.PortabilityScaffolds;
 
 namespace SharpLog
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Runtime.CompilerServices;
-    using System.Threading;
-    using System.Threading.Tasks;
-
-    using SharpLog.PortabilityScaffolds;
-
     public static class LogManager
     {
         private static readonly IConcurrentDictionary<string, ILogger> Loggers;
@@ -49,10 +48,7 @@ namespace SharpLog
                 }
                 return defaultLogger;
             }
-            set
-            {
-                SetDefaultLogger(value);
-            }
+            set { SetDefaultLogger(value); }
         }
 
         public static void Log(string text, [CallerMemberName] string callerName = null)
@@ -234,7 +230,7 @@ namespace SharpLog
 
         public static T CreateLogger<T>(params object[] arguments) where T : ILogger
         {
-            var logger = (T)Activator.CreateInstance(typeof(T), arguments);
+            var logger = (T) Activator.CreateInstance(typeof (T), arguments);
             AttachLogger(logger);
             return logger;
         }

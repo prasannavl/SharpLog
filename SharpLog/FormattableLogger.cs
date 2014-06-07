@@ -72,7 +72,7 @@ namespace SharpLog
             }
         }
 
-        public override void Debug(Func<object, string> textFunc, object state = null, string callerName = null)
+        public override void Debug<T>(Func<T, string> textFunc, T state, string callerName = null)
         {
             if (LogLevelState > LogLevelState.EnabledDebugLowerThreshold)
             {
@@ -90,7 +90,7 @@ namespace SharpLog
             }
         }
 
-        public override void Trace(Func<object, string> textFunc, object state = null, string callerName = null)
+        public override void Trace<T>(Func<T, string> textFunc, T state, [CallerMemberName] string callerName = null)
         {
             if (LogLevelState.HasFlag(LogLevelState.Trace))
             {
@@ -141,7 +141,7 @@ namespace SharpLog
             return Helpers.CompletedTask;
         }
 
-        public override Task DebugAsync(Func<object, string> textFunc, object state = null, string callerName = null)
+        public override Task DebugAsync<T>(Func<T, string> textFunc, T state, [CallerMemberName] string callerName = null)
         {
             if (LogLevelState > LogLevelState.EnabledDebugLowerThreshold)
             {
@@ -161,7 +161,7 @@ namespace SharpLog
             return Helpers.CompletedTask;
         }
 
-        public override Task TraceAsync(Func<object, string> textFunc, object state = null, string callerName = null)
+        public override Task TraceAsync<T>(Func<T, string> textFunc, T state, [CallerMemberName] string callerName = null)
         {
             if (LogLevelState.HasFlag(LogLevelState.Trace))
             {
