@@ -5,6 +5,7 @@ NuGet:
 
 > Install-Package SharpLog 
 
+
 What
 ---
 
@@ -36,7 +37,7 @@ The Cooler Bits
 
 - All loggers have **asynchrony right into its roots**. -> Logger.InfoAsync, Logger.ErrorAsync, etc.
 
-- Debug, and Trace functions are slightly special. They have an extra overload, that even **takes Funcs to offer deffered execution**. It gets executed only if, the logging of that level is active :) .. Oh, if you want to write your own logger, you won't have to do a thing. Its all already wired up for you. 
+- Debug, and Trace functions are slightly special. They have an extra overload, that even **takes Funcs to offer deferred execution**. It gets executed only if, the logging of that level is active :) .. Oh, if you want to write your own logger, you won't have to do a thing. Its all already wired up for you. 
 
     	LogManager.Logger.Debug((ex) => ex.StackTrace, exception);
 
