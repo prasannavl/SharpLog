@@ -5,6 +5,7 @@ NuGet:
 
 > Install-Package SharpLog 
 
+**Project State Note:** This project is old, and .NET PCL side of things have had quite a bit of improvement since. So, this logger never ended up making it to any of my production quality projects, and I tend to stick to small custom loggers or use the Windows' ETW interfaces for a high-performance solution. If you're looking for something off the shelf, I'd suggest taking a look at https://github.com/paulcbetts/splat, or https://github.com/serilog/serilog. 
 
 What
 ---
@@ -16,6 +17,7 @@ It follows simple convention over configuration, and works with PCL.
 - Two interfaces **ILogger**, and **ICompositeLogger** (which itself is simply an ILogger)
 - CompositeLogger simply takes in any number of ILoggers as targets.
 - Numerous abstract classes to quickly implement any type of new Loggers.
+
 
 Why
 ---
@@ -30,7 +32,6 @@ If you find something lacking, just use one of the abstract classes as starting 
 
 And feel free to contribute tid-bits. :) 
 
-I'll keep adding more loggers as I need them, including Bufferred, File-based, memory-based, network-based loggers.
 
 The Cooler Bits
 ---
@@ -40,8 +41,6 @@ The Cooler Bits
 - Debug, and Trace functions are slightly special. They have an extra overload, that even **takes Funcs to offer deferred execution**. It gets executed only if, the logging of that level is active :) .. Oh, if you want to write your own logger, you won't have to do a thing. Its all already wired up for you. 
 
     	LogManager.Logger.Debug((ex) => ex.StackTrace, exception);
-
-- When I say **high-performance, I'm very serious about it**. There are **no multi-level nested checking for log levels, and if they are enabled**. There is just one check that happens. And as you, see above, there's no other logger that I know of, offers deffered execution using Funcs for Debug, and Trace. So, you never incur a performance hit of unwinding through your stackTrace, even if you have logging and or Trace disabled.
 
 
 Example
@@ -149,13 +148,9 @@ Logger writers, fret not, you'd almost never have to implement the whole thing y
 
 There're abstract classes for that. **90% of the time, you'd just end up implementing an Execute method, and an optional ExecuteAsync method**. Everything else is already wired-up for you and ready to go.
 
-Fun and useful ideas:
+Fun and useful ideas for anybody with time :)
 ---
 
 - XAML-based overlay logger (So, it works on all platforms)
 - Network logger and a receiver GUI over network.
 - OpenGL based overlay logger
-
-Cheers.
-
-PVL
