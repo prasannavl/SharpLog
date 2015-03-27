@@ -5,7 +5,7 @@ NuGet:
 
 > Install-Package SharpLog 
 
-**Project State Note:** This project is old, and .NET PCL side of things have had quite a bit of improvement since. So, this logger never ended up making it to any of my production quality projects, and I tend to stick to small custom loggers or use the Windows' ETW interfaces for a high-performance solution. If you're looking for something off the shelf, I'd suggest taking a look at https://github.com/paulcbetts/splat, or https://github.com/serilog/serilog. 
+**Project Status Note:** This project is old, and .NET PCL side of things have had quite a bit of improvement since. So, this logger never ended up making it to any of my production quality projects, and I tend to stick to small custom loggers or use the Windows' ETW interfaces for a high-performance solution. If you're looking for something off the shelf, I'd suggest taking a look at https://github.com/paulcbetts/splat, or https://github.com/serilog/serilog. 
 
 What
 ---
