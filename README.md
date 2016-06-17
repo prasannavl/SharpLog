@@ -1,4 +1,4 @@
-SharpLog [Obsolete]
+SharpLog
 ========
 
 NuGet:
